@@ -1,0 +1,128 @@
+"use client"
+import {Label} from "@/components/ui/label";
+import {Input} from "@/components/ui/input";
+import {Button} from "@/components/ui/button";
+import {useState} from "react";
+import Success from "@/components/Success";
+import { errorHintColor, redFocus } from "../SignUpUi";
+import { SubmitHandler, useForm } from "react-hook-form";
+import { Loader2 } from "lucide-react";
+import { toastError, toastSuccess } from "../toasts/toasts";
+
+interface IDataTypes{
+    currentPassword: string;
+    newPassword: string;
+    confirmPassword: string;
+}
+
+export default function UpdatePassword() {
+   
+    const { register, handleSubmit ,watch, formState:{errors, isSubmitting} } = useForm<IDataTypes>({
+        mode: 'onBlur'
+    });
+
+    const watchNewPassword = watch('newPassword');
+
+    const submitUpdate: SubmitHandler<IDataTypes> = async (data)=>{
+    
+        try {
+            const response = await fetch("/api/account/update/password", {
+                method: "PATCH",
+                credentials: "include",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                    currentPassword: data.currentPassword,
+                    newPassword: data.newPassword,
+                    confirmPassword: data.confirmPassword,
+                }),
+            });
+            const results: { successMessage: string; errorMessage: string} = await response.json();
+            if(!response.ok){
+                 toastError({
+                    message: results.errorMessage,
+                });
+                return;
+            }
+            toastSuccess({
+                message: results.successMessage
+            })
+        } catch (error) {
+            if (error instanceof Error) {
+                toastError({
+                    message: error.message,
+                });
+                return;
+            }
+            toastError({
+                message: String(error),
+            });
+            return;
+        }
+         
+    }
+
+
+    return (
+        <div className="w-full h-fit flex justify-center bg-[#ffff] px-4 py-10 rounded-lg">
+            <div className="w-full max-w-5xl flex flex-col justify-center gap-3 sm:px-28 md:px-52 lg:px-60 mb-4">
+                <form onSubmit={handleSubmit(submitUpdate)}>
+                    <div className="w-full">
+                        <Label htmlFor="currentPassword">Current password</Label>
+                        <Input
+                            className={errors.currentPassword && redFocus}
+                            type="password"
+                            {...register("currentPassword", {
+                                required: "This is required",
+                                minLength: 6,
+                            })}
+                        />
+                        <p className={errorHintColor}>{errors.currentPassword?.message}</p>
+                    </div>
+
+                    <div className="w-full">
+                        <Label htmlFor={"newPassword"}>New password</Label>
+                        <Input
+                            className={errors.newPassword && redFocus}
+                            type={"password"}
+                            {...register("newPassword", {
+                                required: "This is required",
+                                minLength: 6,
+                            })}
+                        />
+                        <p className={errorHintColor}>{errors.newPassword?.message}</p>
+                    </div>
+
+                    <div className="w-full">
+                        <Label htmlFor={"confirmPassword"}>Confirm password</Label>
+                        <Input
+                            className={errors.confirmPassword && redFocus}
+                            type="password"
+                            {...register("confirmPassword", {
+                                required: "This is required",
+                                minLength: 6,
+                                validate: (value) =>
+                                    value === watchNewPassword || "Password mismatch",
+                            })}
+                        />
+                        <p className={errorHintColor}>{errors.confirmPassword?.message}</p>
+                    </div>
+
+                    <div className="w-full pt-2">
+                        <Button
+                            disabled={isSubmitting}
+                            type="submit"
+                            className="w-full"
+                        >
+                            {isSubmitting ? (
+                                <Loader2 className="animate-spin h-4 w-4 mr-2" />
+                            ) : (
+                                "Change password"
+                            )}
+                        </Button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    );
+    
+}
