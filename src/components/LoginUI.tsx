@@ -53,6 +53,7 @@ export default function LoginUi() {
             if (!res.ok) {
                 const dataFrom404: { isValidUser: boolean; errorMessage: string } = await res.json();
                 setUniversalErrorMessage(dataFrom404.errorMessage);
+                return;
             }
 
             const resData: userLoginUIProps = await res.json();
