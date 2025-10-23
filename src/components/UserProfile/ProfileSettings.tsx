@@ -229,7 +229,7 @@ export default function ProfileSettings() {
                     </div>
 
                     <div className="w-full">
-                        {data && data[0]?.id_verification_status !== "Not Verified" ? (
+                        {data && data[0]?.id_verification_status === "Not Verified" ? (
                             <>
                                 <Label htmlFor={"fullName"}>Full Name</Label>
                                 <Input
@@ -317,7 +317,7 @@ export default function ProfileSettings() {
                 </div>
 
                 <div className="w-full flex flex-col justify-center gap-3 sm:flex-row sm:px-10 lg:px-20 lg:flex-row">
-                    <div className="w-full flex flex-col justify-end ">
+                    <div className="w-full flex flex-col justify-end">
                         {isLoading ? (
                             <BeatLoaderUI
                                 className="w-full max-w-7xl m-auto mb-6 flex justify-center pt-4"
@@ -326,7 +326,7 @@ export default function ProfileSettings() {
                             />
                         ) : (
                             <Button
-                                className={`${loading && "pointer-events-none bg-gray-400 w-full sm:w-fit"}`}
+                                className={`${loading && "pointer-events-none bg-gray-400"} w-full`}
                                 disabled={submitDataStatus}
                                 onClick={handleSubmitBtn}
                             >

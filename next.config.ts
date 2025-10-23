@@ -17,20 +17,16 @@ const nextConfig: NextConfig = {
     },
     async rewrites() {
         return [
-            {
-                source: '/api/:path*',
-                destination: 'http://localhost:5001/api/:path*',
-            },
-
             // {
             //     source: '/api/:path*',
-            //     destination: 'https://api.tonmame.store/api/:path*',
+            //     destination: 'http://localhost:5001/api/:path*',
             // },
 
-            // {
-            //     source: '/api/:path*',
-            //     destination: 'https://tonmame.onrender.com/api/:path*',
-            // }
+            {
+                source: '/api/:path*',
+                destination: 'https://api.tonmame.store/api/:path*',
+            },
+
         ]
     },
 };

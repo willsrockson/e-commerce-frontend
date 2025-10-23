@@ -7,7 +7,7 @@ import { Input } from "../ui/input";
 import { Label } from "../ui/label";
 import Image from "next/image";
 import { Controller, Control } from "react-hook-form";
-import { DndContext, closestCorners, useSensor, MouseSensor, useSensors, DragOverlay, DragStartEvent, TouchSensor, PointerSensor } from "@dnd-kit/core";
+import { DndContext, closestCorners, useSensor, MouseSensor, useSensors, DragOverlay, DragStartEvent, TouchSensor } from "@dnd-kit/core";
 import { arrayMove, horizontalListSortingStrategy, SortableContext } from '@dnd-kit/sortable'
 import SortableImages from "./sortable.images";
 import { toastError } from "../toasts/toasts";

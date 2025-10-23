@@ -3,8 +3,7 @@ import {Button} from "@/components/ui/button";
 import {Trash2} from "lucide-react";
 import {Input} from "@/components/ui/input";
 import {Label} from "@/components/ui/label";
-import {useEffect, useState} from "react";
-import {useRouter} from "next/navigation";
+import {useEffect} from "react";
 import { toastError, toastSuccess } from "../toasts/toasts";
 import {
   Select,

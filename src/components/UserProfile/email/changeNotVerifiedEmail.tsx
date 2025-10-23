@@ -50,13 +50,11 @@ export default function ChangeNotVerifiedEmail() {
              })
          } catch (error) {
               if(error instanceof Error){
-                console.error(error.message);
                 toastError({
                     message: error.message,
                 })
                 return;
               }
-              console.error(String(error));
                 toastError({
                     message: 'Something unexpected happen, please retry.'
                 })
@@ -86,11 +84,9 @@ export default function ChangeNotVerifiedEmail() {
             toastSuccess({ message: responseData.successMessage });
         } catch (error) {
             if (error instanceof Error) {
-                console.error(error.message);
                 toastError({ message: "Verification request failed" });
                 return;
             }
-            console.error(String(error));
             toastError({ message: "Verification request failed" });
             return;
         }

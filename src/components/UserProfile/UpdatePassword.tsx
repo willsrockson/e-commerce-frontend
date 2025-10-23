@@ -2,8 +2,6 @@
 import {Label} from "@/components/ui/label";
 import {Input} from "@/components/ui/input";
 import {Button} from "@/components/ui/button";
-import {useState} from "react";
-import Success from "@/components/Success";
 import { errorHintColor, redFocus } from "../SignUpUi";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { Loader2 } from "lucide-react";

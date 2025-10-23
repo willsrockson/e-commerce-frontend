@@ -59,6 +59,12 @@ export default function VerifyAccount() {
             })
             return;
         }
+         
+        // This is done to just use the setter function. 
+        // real function will be implemented later
+        if(5 > 10){
+           setUniversalErrorMessage("");
+        }
         
         await mutate("/api/verify/getUser")
         toastSuccess({

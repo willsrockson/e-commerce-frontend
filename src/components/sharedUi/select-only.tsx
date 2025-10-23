@@ -2,7 +2,7 @@
 'use client'
 import {Select, SelectContent, SelectItem, SelectTrigger, SelectValue} from "@/components/ui/select";
 import { useEffect } from "react";
-import { Control, Controller, RegisterOptions, useFormContext } from 'react-hook-form'
+import { Control, Controller, RegisterOptions } from 'react-hook-form'
 
 interface ISelectType{ 
  name: string;   
