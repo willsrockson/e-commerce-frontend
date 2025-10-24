@@ -1,35 +1,29 @@
 import { NextResponse, NextRequest } from "next/server";
-//import { auth } from "./lib/providers/auth";
+import { jwtVerify } from "jose"
+export const runtime = "nodejs";
 
+const secret = new TextEncoder().encode(`${process.env.JWT_SECRET_KEY}`);
 export async function middleware(req: NextRequest) {
-    try {
     const { pathname } = req.nextUrl;
     const token = req.cookies.get("access_token")?.value;
 
     if (!token?.trim() && pathname !== "/login") {
         return NextResponse.redirect(new URL("/login", req.url));
     }
-    
-    if (token) {
-       // const okUser = await auth({ token: token });
-        //console.log("auth state", okUser);
 
-        if (!token && pathname !== "/login") {
-            return NextResponse.redirect(new URL("/login", req.url));
+    try {
+        if (token) {
+            const isAuthenticated = await jwtVerify(token, secret, { algorithms: ["HS256"] });
+
+            if (pathname === "/login" && isAuthenticated) {
+                return NextResponse.redirect(new URL("/", req.url));
+            }
         }
-
-        if (pathname === "/login" && token) {
-            return NextResponse.redirect(new URL("/", req.url));
-        }
-
-        console.log("Print cookies", token);
-        
+    } catch (err) {
+        console.log("Catch block", err);
+        return NextResponse.redirect(new URL("/", req.url));
     }
-      
-    } catch {
-       return NextResponse.redirect(new URL("/", req.url));
-    }
-
+    console.log("Close to next");
     return NextResponse.next();
 }
 

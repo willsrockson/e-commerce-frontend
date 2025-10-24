@@ -41,3 +41,36 @@
 //         "/workspace/:path*",
 //     ],
 // };
+
+
+
+
+
+// try {
+//         const { pathname } = req.nextUrl;
+//         const token = req.cookies.get("access_token")?.value;
+        
+//         if (!token?.trim() && pathname !== "/login") {
+//             return NextResponse.redirect(new URL("/login", req.url));
+//         }
+
+//         if (token) {
+//             const isAuthenticated = await jwtVerify(token, secret, { algorithms: ['HS256'] });
+//             if(!isAuthenticated){
+//                 throw new Error("Invalid token")
+//             }
+//             console.log("isAuthenticated");
+//             if (!isAuthenticated && pathname !== "/login") {
+//                 return NextResponse.redirect(new URL("/login", req.url));
+//             }
+
+//             if (pathname === "/login" && isAuthenticated) {
+//                 return NextResponse.redirect(new URL("/", req.url));
+//             }
+//         }
+//     } catch (error) {
+//         console.error(`${Date.now().toLocaleString()} from catch block: `, error);
+//         return NextResponse.redirect(new URL("/", req.url));
+//     }
+
+//     return NextResponse.next();

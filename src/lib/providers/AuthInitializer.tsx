@@ -3,7 +3,7 @@ import { authStore } from '@/store/authStore';
 import React, { useEffect } from 'react'
 
 type ResponseType = {
-    data: [{full_name: string; image_url: string}];
+    data: {full_name: string; image_url: string}[];
     isValidUser: boolean;
 }
 
@@ -29,11 +29,8 @@ export default function AuthInitializer({ children }: { children: React.ReactNod
                 setAvatarFromStore(data.data[0].image_url);
             } catch (error) {
                 if(error instanceof Error){
-                    console.error("Failed to restore session: ", error.message);
                     return;
                 }
-                console.log("Failed to restore session: ", String(error));
-                return;
             }
          };
                

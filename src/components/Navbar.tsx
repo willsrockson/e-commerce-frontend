@@ -22,14 +22,14 @@ import {
 } from "@/components/ui/sheet";
 
 import {authStore} from "@/store/authStore";
-import { usePathname, useRouter } from "next/navigation";
-//import debounce from "lodash/debounce";
+import { usePathname } from "next/navigation";
 import {categoryList} from "@/lib/CategoryList";
 import { toastError } from "./toasts/toasts"
 
 
 export default function Navbar() {
     const pathname = usePathname();
+    //const router = useRouter()
     const isAuthenticated = authStore((state) => state.isAuthenticated);
     const [isSearchActive, setIsSearchActive] = useState(false);
 
@@ -39,68 +39,30 @@ export default function Navbar() {
     const setFallBackNameFromStore = authStore(state => state.setAvatarFallback);
     const setAvatarFromStore = authStore(state => state.setAvatarUrl);
 
-    //const [serverSearch, setServerSearch] = useState<[]>([]);
-    //const [searchWord, setSearchWords] = useState<string>('')
 
-    const router = useRouter()
-    // Responsible for sending queries to the URL and BackEnd
-    //const query = new URLSearchParams({});
-
-    // const searchDebounce = useCallback(
-    //     debounce((newData) => setSearchWords(() => newData), 1000),
-    //     []
-    // );
-
-
-    // useEffect(() => {
-    //     if (searchWord) {
-    //         query.set("search", searchWord)
-    //     }
-    //     router.push(`?${query}`)
-    //
-    //     const searchFunction = async () => {
-    //         const res = await fetch(`/api/search/find-product?${query}`);
-    //         if (!res.ok) return setServerSearch([]);
-    //         const data = await res.json();
-    //         console.log("search Data--", data)
-    //         setServerSearch(data);
-    //
-    //     }
-    //     searchFunction()
-    //
-    //
-    // }, [searchWord]);
-
-    // Prevent scrolling in the body/ background when the hamburger is opened
-    // useEffect(() => {
-    //     if (!hamburger) {
-    //         document.body.classList.add("overflow-hidden");
-    //     } else {
-    //         document.body.classList.remove("overflow-hidden");
-    //     }
-    //
-    //     return () => document.body.classList.remove("overflow-hidden");
-    // }, [hamburger]);
-
-    const logout = async ()=>{
-        const res = await fetch("/api/user/sign-out", {
+    const logout = async () => {
+        await fetch("/api/user/sign-out", {
             method: "GET",
-            credentials: "include"
-        });
-        if(!res.ok){
-            toastError({
-               message: "Oops! Something happened. Please retry."
+            credentials: "include",
+            cache: "no-store"
+        })
+            .then(() => {
+                isLoggedInFromStore(false);
+                setFallBackNameFromStore("");
+                setAvatarFromStore("");
+                sessionStorage.removeItem("auth");
+                //window.location.replace("/");
+                window.location.href = "/"
             })
-           return; 
-        }
-        isLoggedInFromStore(false);
-        setFallBackNameFromStore("");
-        setAvatarFromStore("");
-        sessionStorage.removeItem('auth');
-        router.push("/");
-        router.refresh();
-
-    }
+            .catch(() => {
+                toastError({
+                    message: "Oops! Something happened. Please retry.",
+                });
+                //window.location.replace("/");
+                window.location.href = "/"
+                return;
+            });
+    };
 
      if (pathname === "/login") {
          return (
