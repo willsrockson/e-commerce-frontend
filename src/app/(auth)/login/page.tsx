@@ -1,12 +1,13 @@
 import LoginUi from "@/components/LoginUI";
 import SignUpUi from "@/components/SignUpUi";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
+import { siteMaxWidth } from "@/lib/constants";
 import Image from "next/image";
 export default function LoginPage() {
 
     return (
         <div className="w-full h-[calc(100vh-4rem)]">
-            <div className="w-full max-w-[1400px] m-auto px-7 pt-10 lg:gap-12 grid grid-cols-1 lg:grid-cols-[1fr_1fr] bg-white-200 place-content-start">
+            <div className={`w-full max-w-[${siteMaxWidth}] m-auto px-7 pt-10 lg:gap-12 grid grid-cols-1 lg:grid-cols-[1fr_1fr] bg-white-200 place-content-start`}>
 
                 <div className="relative hidden lg:block w-full min-h-[600px] rounded-lg overflow-hidden">
                       <Image 

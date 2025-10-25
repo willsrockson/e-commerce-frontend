@@ -15,6 +15,7 @@ import { useForm } from 'react-hook-form';
 import { labelTextColor } from '../RoutingComponents/Electronics/MobilePhones';
 import { useAsyncList } from 'react-stately';
 import { useInView } from 'react-intersection-observer';
+import { siteMaxWidth } from '@/lib/constants';
 
 const month = ["January","February","March","April","May","June","July","August","September","October","November","December"];
 
@@ -152,14 +153,14 @@ export default function MyAdsUi() {
         <div className="w-full pt-6 border-t">
 
 
-            <div className="w-full max-w-[1400px] m-auto mb-6">
+            <div className={`w-full max-w-[${siteMaxWidth}] m-auto mb-6`}>
                 <Badge className="bg-cardBg rounded-lg hover:bg-[#F4F3F3] text-gray-600 cursor-pointer py-1.5"
                        onClick={() => router.push("/") }>Home
                 </Badge>
             </div>
 
 
-            <div className="w-full max-w-[1400px] m-auto grid lg:grid-cols-[1fr_3fr] gap-4 mb-20">
+            <div className={`w-full max-w-[${siteMaxWidth}] m-auto grid lg:grid-cols-[1fr_3fr] gap-4 mb-20`}>
 
                 {/*Grid first item #87A2FF */}
                 <div className="w-full">

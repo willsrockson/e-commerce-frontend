@@ -1,11 +1,12 @@
 "use client"
 
+import { siteMaxWidth } from "@/lib/constants";
 import Link from "next/link";
 
 export default function Footer() {
     return (
         <footer className="border-t bg-background">
-            <div className="container py-8 md:py-12 max-w-[1400px] m-auto px-7">
+            <div className={`container py-8 md:py-12 max-w-[${siteMaxWidth}] m-auto px-7`}>
                 <div className="grid grid-cols-2 gap-8 md:grid-cols-4 lg:grid-cols-5">
                     <div className="col-span-2">
                         <Link href="/" className="inline-block">

@@ -1,3 +1,4 @@
+import { currency } from "@/lib/helpers/universal-functions";
 import { Badge } from "./ui/badge"
 import {CheckCircle} from "lucide-react";
 import Image from "next/image";
@@ -73,8 +74,8 @@ export default function ProductsCard({id, firstImageUrl, price, title, condition
                 </div>
 
                 <div className="px-2 pb-2 pt-1">
-                    <span className="text-lg font-bold text-blue-500">GH₵ {price}</span>
-                    <div className="space-y-1">
+                    <span className="text-lg font-semibold text-blue-500">{currency(price)}</span>
+                    <div className="space-y-1.5">
                         <p className="font-semibold text-sm line-clamp-1">{title}</p>
                         <p className="font-medium text-xs text-gray-600 line-clamp-2">
                            {description}

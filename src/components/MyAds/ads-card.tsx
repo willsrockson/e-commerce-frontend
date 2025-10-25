@@ -17,6 +17,7 @@ import { toastError, toastSuccess } from "../toasts/toasts";
 import Image from "next/image";
 import { useState } from "react";
 import { Loader2 } from "lucide-react";
+import { currency } from "@/lib/helpers/universal-functions";
 
 
 
@@ -103,7 +104,7 @@ export default function AdsCard({id, sub_category, image, price, title, location
                 </Link>
                </div> 
                 <div className="w-full space-y-3 flex flex-col justify-center px-4">
-                    <p className="text-lg text-sky-500 font-bold leading-none">GH₵ {price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}</p>
+                    <p className="text-lg text-sky-500 font-semibold leading-none">{currency(price)}</p>
                     <h3 className="font-medium text-sm line-clamp-1 leading-none">{title}</h3>
                     <div className="text-xs text-muted-foreground space-y-3 leading-none">
                         <p>{location}</p>

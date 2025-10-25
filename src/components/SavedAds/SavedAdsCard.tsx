@@ -5,6 +5,7 @@ import {Copy, Loader2} from "lucide-react";
 import { toastError, toastSuccess } from "../toasts/toasts";
 import Image from "next/image";
 import { useState } from "react";
+import { currency } from "@/lib/helpers/universal-functions";
 
 interface SavedAdsCardProps {
     saved_id: string;
@@ -84,7 +85,7 @@ export default function SavedAdsCard({ saved_id, ads_id, sub_category, image, pr
 
                 <div className="flex flex-col flex-1 justify-center px-4 py-3 space-y-1">
                     <p className="text-lg font-semibold text-sky-500">
-                        GH₵ {price.toLocaleString()}
+                       {currency(price)}
                     </p>
                     <p className="text-gray-900 text-sm line-clamp-1">{title}</p>
                    

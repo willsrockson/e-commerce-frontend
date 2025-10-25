@@ -25,6 +25,7 @@ import {authStore} from "@/store/authStore";
 import { usePathname } from "next/navigation";
 import {categoryList} from "@/lib/CategoryList";
 import { toastError } from "./toasts/toasts"
+import { siteMaxWidth } from "@/lib/constants"
 
 
 export default function Navbar() {
@@ -51,14 +52,12 @@ export default function Navbar() {
                 setFallBackNameFromStore("");
                 setAvatarFromStore("");
                 sessionStorage.removeItem("auth");
-                //window.location.replace("/");
                 window.location.href = "/"
             })
             .catch(() => {
                 toastError({
                     message: "Oops! Something happened. Please retry.",
                 });
-                //window.location.replace("/");
                 window.location.href = "/"
                 return;
             });
@@ -67,7 +66,7 @@ export default function Navbar() {
      if (pathname === "/login") {
          return (
              <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
-                 <div className="max-w-[1400px] m-auto flex h-16 items-center justify-between px-4">
+                 <div className={`max-w-[${siteMaxWidth}] m-auto flex h-16 items-center justify-between px-4`}>
                      <Link
                          href="/"
                          className="flex items-center gap-2 pb-4 pt-2"
@@ -82,7 +81,7 @@ export default function Navbar() {
 
     return (
         <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
-            <div className="max-w-[1400px] m-auto flex h-16 items-center justify-between px-4">
+            <div className={`max-w-[${siteMaxWidth}] m-auto flex h-16 items-center justify-between px-4`}>
                 <div className="flex items-center gap-2 md:gap-4">
                     <Sheet>
                         <SheetTrigger asChild>

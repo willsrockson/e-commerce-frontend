@@ -23,7 +23,6 @@ export async function middleware(req: NextRequest) {
         console.log("Catch block", err);
         return NextResponse.redirect(new URL("/", req.url));
     }
-    console.log("Close to next");
     return NextResponse.next();
 }
 

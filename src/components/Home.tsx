@@ -10,7 +10,7 @@ import CategoryPage from "@/components/CategoryPage";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { debounce } from "lodash";
 import { useRouter, useSearchParams } from "next/navigation";
-import { tabsCustomColor } from "@/lib/constants";
+import { siteMaxWidth, tabsCustomColor } from "@/lib/constants";
 const { handleEmailVerification } = await import("@/lib/helpers/email.links"); // Lazy loading this helper function
 
 
@@ -94,10 +94,10 @@ export default function HomePage() {
 
     return (
         <div className="w-full min-h-[calc(100vh-4rem)]">
-            <div className="flex flex-col max-w-[1400px] w-full h-[fit-content] m-auto rounded-br-xl rounded-bl-xl mb-20 px-4">
+            <div className={`flex flex-col max-w-[${siteMaxWidth}] w-full h-[fit-content] m-auto rounded-br-xl rounded-bl-xl mb-20 px-4`}>
 
                 {/* Hero section*/}
-                <div className="w-full max-w-[1400px] py-8 space-y-10">
+                <div className={`w-full max-w-[${siteMaxWidth}] py-8 space-y-10`}>
                     <section className="relative overflow-hidden rounded-xl bg-gradient-to-r from-primary/90 to-primary">
                         <div className="absolute inset-0 bg-hero bg-cover bg-center opacity-60"></div>
                         <div className="relative z-10 px-6 py-16 md:py-24 md:px-12 lg:py-32 lg:px-16 text-white">

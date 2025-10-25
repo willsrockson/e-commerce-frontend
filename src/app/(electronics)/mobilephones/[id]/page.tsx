@@ -39,6 +39,7 @@ import { useEffect, useRef, useState } from "react";
 import { toastError, toastSuccess } from "@/components/toasts/toasts";
 import { useAsyncList } from "react-stately";
 import { useInView } from "react-intersection-observer";
+import { siteMaxWidth } from "@/lib/constants";
 
 const month = [
   "January",
@@ -177,7 +178,7 @@ export default function Phone() {
   return (
     <div className="w-full">
       <div className="w-full p-4">
-        <div className="w-full max-w-[1400] px-4 m-auto pt-6 ">
+        <div className={`w-full max-w-[${siteMaxWidth}] px-4 m-auto pt-6 `}>
           <div className="flex items-center justify-start w-full mb-6 gap-3">
             <Badge
               className="bg-cardBg hover:bg-[#F4F3F3] text-gray-600 cursor-pointer"
