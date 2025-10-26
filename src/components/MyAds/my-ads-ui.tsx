@@ -160,7 +160,7 @@ export default function MyAdsUi() {
             </div>
 
 
-            <div className={`w-full max-w-[${siteMaxWidth}] m-auto grid lg:grid-cols-[1fr_3fr] gap-4 mb-20`}>
+            <div className={`w-full ${siteMaxWidth} m-auto grid lg:grid-cols-[1fr_3fr] gap-4 mb-20`}>
 
                 {/*Grid first item #87A2FF */}
                 <div className="w-full">

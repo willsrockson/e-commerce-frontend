@@ -13,10 +13,10 @@ export default async function Settings() {
     return (
          <div className="w-full min-h-dvh bg-gradient-to-br from-blue-50 via-indigo-50 to-blue-300">
 
-             <section className={`max-w-[${siteMaxWidth}] mx-auto py-10 px-4`}>
+             <section className={`${siteMaxWidth} mx-auto py-10 px-4`}>
 
                  <Tabs defaultValue="profile" >
-                     <TabsList className={`max-w-[${siteMaxWidth}] w-full sm:w-fit flex justify-start overflow-x-auto mb-6 bg-white`}>
+                     <TabsList className={`${siteMaxWidth} w-full sm:w-fit flex justify-start overflow-x-auto mb-6 bg-white`}>
                          <TabsTrigger className={tabsCustomColor} value="profile">Profile settings</TabsTrigger>
                          <TabsTrigger className={tabsCustomColor} value="verification">ID verification</TabsTrigger>
                          <TabsTrigger className={tabsCustomColor} value="security">Security</TabsTrigger>

@@ -13,10 +13,10 @@ export default function CategoryPage() {
 
             <div className="w-full">
 
-                <section className={`max-w-[${siteMaxWidth}] mx-auto py-5`}>
+                <section className={`${siteMaxWidth} mx-auto py-5`}>
 
                     <Tabs defaultValue="electronics">
-                        <TabsList className={`max-w-[${siteMaxWidth}] w-full sm:w-fit flex justify-start overflow-x-auto mb-6`}>
+                        <TabsList className={`${siteMaxWidth} w-full sm:w-fit flex justify-start overflow-x-auto mb-6`}>
                             <TabsTrigger className={tabsCustomColor} value="electronics">Electronics</TabsTrigger>
                             <TabsTrigger className={tabsCustomColor} value="vehicles">Vehicles</TabsTrigger>
                             <TabsTrigger className={tabsCustomColor} value="property">Property</TabsTrigger>

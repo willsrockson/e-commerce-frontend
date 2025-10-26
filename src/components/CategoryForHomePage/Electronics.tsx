@@ -19,7 +19,7 @@ const Electronics = () => {
             href: '/mobilephones',
             img: '/images/categories/electronics/phone.webp',
             alt: 'Phones',
-            label: 'Phones',
+            label: 'Mobile Phones',
         },
     
         {
@@ -115,7 +115,7 @@ const Electronics = () => {
           { electronics.map(items =>(
 
                 <Link href={items.href} className="flex flex-col items-center" key={items.id}>
-                    <div className="hover:bg-sky-100 flex flex-col justify-center items-center bg-cardBg shadow transition-shadow duration-200 hover:shadow-md py-4 w-full border rounded-full">
+                    <div className="hover:bg-gray-300/50 flex flex-col justify-center items-center bg-cardBg shadow transition-shadow duration-200 hover:shadow-md py-4 w-full border rounded-full">
                         {/* Image Container */}
                         <div className="relative aspect-square w-full max-w-[40px]">
                             <Image

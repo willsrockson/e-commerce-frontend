@@ -268,7 +268,7 @@ export default function MobilePhones() {
     return (
         <div className="w-full min-h-[calc(100vh-4rem)] pt-6 bg-[#EBF1F4]">
             <form>
-                <div className={`w-full max-w-[${siteMaxWidth}] m-auto mb-6 px-4`}>
+                <div className={`w-full ${siteMaxWidth} m-auto mb-6 px-4`}>
                     <Badge
                         className="bg-cardBg rounded-lg hover:bg-[#F4F3F3] text-gray-600 cursor-pointer py-1.5"
                         onClick={() => router.push("/")}
@@ -277,7 +277,7 @@ export default function MobilePhones() {
                     </Badge>
                 </div>
 
-                <div className={`w-full max-w-[${siteMaxWidth}] m-auto grid lg:grid-cols-[1.5fr_3fr] xl:grid-cols-[1fr_3fr] gap-4 px-4 pb-44`}>
+                <div className={`w-full ${siteMaxWidth} m-auto grid lg:grid-cols-[1.5fr_3fr] xl:grid-cols-[1fr_3fr] gap-4 px-4 pb-44`}>
                     {/*Grid first item #87A2FF */}
                     <section className="w-full overflow-hidden">
                         <div className="w-full">
@@ -656,7 +656,7 @@ export default function MobilePhones() {
                     </section>
 
                     {/* Second grid */}
-                    <section className="w-full h-full overflow-x-auto">
+                    <section className="w-full h-full overflow-x-auto ">
                         <p className="font-semibold text-lg text-gray-800 mb-3">
                                 Some popular brands
                             </p>

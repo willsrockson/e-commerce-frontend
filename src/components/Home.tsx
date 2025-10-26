@@ -94,10 +94,10 @@ export default function HomePage() {
 
     return (
         <div className="w-full min-h-[calc(100vh-4rem)]">
-            <div className={`flex flex-col max-w-[${siteMaxWidth}] w-full h-[fit-content] m-auto rounded-br-xl rounded-bl-xl mb-20 px-4`}>
+            <div className={`flex flex-col ${siteMaxWidth} w-full h-[fit-content] m-auto rounded-br-xl rounded-bl-xl mb-20 px-4`}>
 
                 {/* Hero section*/}
-                <div className={`w-full max-w-[${siteMaxWidth}] py-8 space-y-10`}>
+                <div className={`w-full ${siteMaxWidth} py-8 space-y-10`}>
                     <section className="relative overflow-hidden rounded-xl bg-gradient-to-r from-primary/90 to-primary">
                         <div className="absolute inset-0 bg-hero bg-cover bg-center opacity-60"></div>
                         <div className="relative z-10 px-6 py-16 md:py-24 md:px-12 lg:py-32 lg:px-16 text-white">
@@ -162,9 +162,9 @@ export default function HomePage() {
                                     <TabsTrigger className={tabsCustomColor} value="newpost">New posts</TabsTrigger>
                                     <TabsTrigger className={tabsCustomColor} value="trending">Trending</TabsTrigger>
                                 </TabsList>
-                                <Button variant="link" className="font-medium">
+                                {/* <Button variant="link" className="font-medium">
                                     View All
-                                </Button>
+                                </Button> */}
                             </div>
                             <TabsContent value="newpost" className="mt-0 pb-5">
                                 <NewPosts/>
@@ -178,7 +178,7 @@ export default function HomePage() {
 
 
                     {/* Call to Action */}
-                    <section className="bg-[#E7ECF3] rounded-xl p-8 md:p-12 text-center">
+                    <section className="bg-[#E7ECF3] rounded-md p-8 md:p-12 text-center">
                         <h2 className="text-2xl md:text-3xl font-bold mb-4">
                             Have something to sell?
                         </h2>

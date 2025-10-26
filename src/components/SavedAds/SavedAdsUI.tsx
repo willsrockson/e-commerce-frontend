@@ -52,14 +52,14 @@ export default function SavedAdsUI() {
         <div className="w-full min-h-[calc(100vh-5rem)] p-2 sm:p-6">
 
 
-            <div className={`w-full max-w-[${siteMaxWidth}] px-4 m-auto mb-6`}>
+            <div className={`w-full ${siteMaxWidth} px-4 m-auto mb-6`}>
                 <Badge className="bg-cardBg rounded-lg hover:bg-[#F4F3F3] text-gray-600 cursor-pointer py-1.5"
                        onClick={() => router.push("/") }>Home
                 </Badge>
             </div>
 
 
-            <div className={`w-full max-w-[${siteMaxWidth}] px-4 m-auto grid lg:grid-cols-[1fr_3fr] gap-4`}>
+            <div className={`w-full ${siteMaxWidth} px-4 m-auto grid lg:grid-cols-[1fr_3fr] gap-4`}>
 
                 {/*Grid first item #87A2FF */}
                 <section className=" ">

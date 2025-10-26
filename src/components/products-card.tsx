@@ -77,15 +77,15 @@ export default function ProductsCard({id, firstImageUrl, price, title, condition
                     <span className="text-lg font-semibold text-blue-500">{currency(price)}</span>
                     <div className="space-y-1.5">
                         <p className="font-semibold text-sm line-clamp-1">{title}</p>
-                        <p className="font-medium text-xs text-gray-600 line-clamp-2">
+                        <p className="font-medium text-xs text-gray-600 line-clamp-1">
                            {description}
                         </p>
                         <p className="text-xs text-muted-foreground line-clamp-1">{location}</p>
                        <div className="flex flex-col gap-y-1 sm:flex-row justify-between">
-                           <Badge className="bg-blue-100 text-gray-500">
+                           <Badge variant={'secondary'} className="text-gray-500">
                             <span>{condition}</span>
                         </Badge>
-                        <Badge className="bg-blue-100 text-gray-500">
+                        <Badge variant={'outline'} className="text-gray-500">
                             <span>{formatDate(createdAt.toString())}</span>
                         </Badge>
                        </div>

@@ -103,12 +103,11 @@ export default function SignUpUi() {
         // w-full border px-8 py-4  h-fit rounded-lg max-w-md pb-8
         <div className="w-full h-fit max-w-md py-8">
             <form onSubmit={handleSubmit(handleRegisterSubmit)}>
-                <div className="flex flex-col mb-5 items-center ">
-                    {/* <span className="text-2xl text-testing">Create Account</span> */}
+                {/* <div className="flex flex-col mb-5 items-center ">
                     <p className="font-bold">
                        Create an account
                     </p>
-                </div>
+                </div> */}
 
                 <div className="flex flex-col ">
                     {/* <Label htmlFor="fullname">Full name</Label> */}

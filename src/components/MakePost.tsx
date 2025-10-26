@@ -235,7 +235,7 @@ export default function MakePost() {
                                               minLength: { value: 6, 
                                               message: 'Title must be at least 6 characters long'
                                            }})}
-                                            className={`${errors.title && redFocus} min-h-24`}
+                                            className={`${errors.title && redFocus} min-h-24 h-full`}
                                           />
                                 <p className={postErrorColor}>{errors.title?.message}</p>     
                                 </div>
@@ -243,17 +243,20 @@ export default function MakePost() {
                                 <div className="flex flex-col w-full">
                                     <div className="flex justify-between items-center">
                                         <Label htmlFor="description">Description</Label>
-                                        <Label htmlFor="description">({descriptionValue.length}/200)</Label>
+                                        <Label htmlFor="description">({descriptionValue.length}/400)</Label>
                                     </div>
                                    
                                     <Textarea 
                                            id="description"
                                            {...register('description', 
                                             { required: 'This is required', 
-                                              minLength: { value: 200, 
-                                              message: 'Description must be at least 200 characters long'
+                                              minLength: { value: 20, 
+                                              message: 'Description must be at least 20 characters long'
+                                           },maxLength:{
+                                               value: 400,
+                                               message: "Description cannot be more than 400 characters long"
                                            }})}
-                                            className={`${errors.description && redFocus} min-h-24`}
+                                            className={`${errors.description && redFocus} min-h-24 h-full`}
                                           />
                                 <p className={postErrorColor}>{errors.description?.message}</p> 
                                 </div>

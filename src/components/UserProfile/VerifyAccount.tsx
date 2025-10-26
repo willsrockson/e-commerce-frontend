@@ -199,7 +199,7 @@ export default function VerifyAccount() {
                                     <Button
                                         type="submit"
                                         disabled={isSubmitting}
-                                        className="w-full bg-testing hover:bg-blue-400"
+                                        className="w-full"
                                     >
                                         {isSubmitting ? "Submitting..." : "Submit"}
                                     </Button>

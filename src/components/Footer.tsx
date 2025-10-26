@@ -1,12 +1,14 @@
 "use client"
 
 import { siteMaxWidth } from "@/lib/constants";
+import { authStore } from "@/store/authStore";
 import Link from "next/link";
 
 export default function Footer() {
+    const isAuthenticated = authStore().isAuthenticated
     return (
         <footer className="border-t bg-background">
-            <div className={`container py-8 md:py-12 max-w-[${siteMaxWidth}] m-auto px-7`}>
+            <div className={`container py-8 md:py-12 ${siteMaxWidth} m-auto px-7`}>
                 <div className="grid grid-cols-2 gap-8 md:grid-cols-4 lg:grid-cols-5">
                     <div className="col-span-2">
                         <Link href="/" className="inline-block">
@@ -20,23 +22,23 @@ export default function Footer() {
                         <h3 className="text-sm font-medium">Categories</h3>
                         <ul className="mt-4 space-y-2 text-sm">
                             <li>
-                                <Link href="/category/electronics" className="text-muted-foreground hover:text-foreground">
-                                    Electronics
+                                <Link href="/mobilephones" className="text-muted-foreground hover:text-foreground">
+                                    Mobile Phones
                                 </Link>
                             </li>
                             <li>
-                                <Link href="/category/vehicles" className="text-muted-foreground hover:text-foreground">
+                                <Link href="/vehicles" className="text-muted-foreground hover:text-foreground">
                                     Vehicles
                                 </Link>
                             </li>
                             <li>
-                                <Link href="/category/land" className="text-muted-foreground hover:text-foreground">
+                                <Link href="/land" className="text-muted-foreground hover:text-foreground">
                                     Land
                                 </Link>
                             </li>
                             <li>
-                                <Link href="/category/clothing" className="text-muted-foreground hover:text-foreground">
-                                    Clothing
+                                <Link href="/clothing" className="text-muted-foreground hover:text-foreground">
+                                    Shoes
                                 </Link>
                             </li>
                         </ul>
@@ -44,23 +46,27 @@ export default function Footer() {
                     <div>
                         <h3 className="text-sm font-medium">Account</h3>
                         <ul className="mt-4 space-y-2 text-sm">
-                            <li>
+                            { !isAuthenticated &&
+                                (<li>
                                 <Link href="/login" className="text-muted-foreground hover:text-foreground">
                                     Login
                                 </Link>
-                            </li>
-                            <li>
+                            </li>)
+                            }
+                            { !isAuthenticated &&
+                                (<li>
                                 <Link href="/login" className="text-muted-foreground hover:text-foreground">
                                     Register
                                 </Link>
-                            </li>
+                            </li>)
+                            }
                             <li>
                                 <Link href="/profile" className="text-muted-foreground hover:text-foreground">
                                     My Profile
                                 </Link>
                             </li>
                             <li>
-                                <Link href="/bookmarks" className="text-muted-foreground hover:text-foreground">
+                                <Link href="/buylater" className="text-muted-foreground hover:text-foreground">
                                     Bookmarks
                                 </Link>
                             </li>
@@ -75,9 +81,9 @@ export default function Footer() {
                                 </a>
                             </li>
                             <li>
-                                <a href="#" className="text-muted-foreground hover:text-foreground">
+                                <Link href="/contact-us" className="text-muted-foreground hover:text-foreground">
                                     Contact Us
-                                </a>
+                                </Link>
                             </li>
                             <li>
                                 <a href="#" className="text-muted-foreground hover:text-foreground">
@@ -98,7 +104,7 @@ export default function Footer() {
                     </p>
                     <div className="mt-4 md:mt-0">
                         <p className="text-xs text-muted-foreground">
-                            Designed and built with care
+                            
                         </p>
                     </div>
                 </div>
