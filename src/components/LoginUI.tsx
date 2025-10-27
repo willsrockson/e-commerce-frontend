@@ -1,5 +1,4 @@
 "use client";
-import { Input } from "./ui/input";
 import { Button } from "./ui/button";
 import Link from "next/link";
 import { useEffect, useState } from "react";
@@ -9,6 +8,8 @@ import { authStore } from "@/store/authStore";
 import { redFocus, errorHintColor } from "./SignUpUi";
 import { toastError } from "./toasts/toasts";
 import { useForm, SubmitHandler } from "react-hook-form";
+import { FloatingLabelInput } from "./ui/floating-label-input";
+import FloatingPassword from "./sharedUi/floating-password";
 
 export interface userLoginUIProps {
     isValidUser: boolean;
@@ -16,13 +17,13 @@ export interface userLoginUIProps {
     successMessage: string;
 }
 
-interface ILogin{
+interface Login{
     emailPhone: string | number;
     password: string;
 }
 
 export default function LoginUi() {
-    const {register, handleSubmit, formState:{errors, isSubmitting}} = useForm<ILogin>({
+    const {register, handleSubmit, formState:{errors, isSubmitting}} = useForm<Login>({
         mode: 'onBlur'
     })
     
@@ -33,12 +34,11 @@ export default function LoginUi() {
     const setAvatarFromStore = authStore((state) => state.setAvatarUrl);
 
     const [universalErrorMessage, setUniversalErrorMessage] = useState<string | null>(null);
-    
 
     const router = useRouter();
 
 
-    const loginSubmitHandler: SubmitHandler<ILogin> = async (data) => {
+    const loginSubmitHandler: SubmitHandler<Login> = async (data) => {
         try {
             const res = await fetch("/api/user/login", {
                 credentials: "include",
@@ -83,67 +83,63 @@ export default function LoginUi() {
     return (
         <div className="w-full h-fit max-w-md py-8">
             <form onSubmit={handleSubmit(loginSubmitHandler)}>
-                <div className="flex flex-col mb-5 items-center ">
-                    {/* <span className="text-2xl text-testing">Create Account</span> */}
-                    <p className="font-bold">
-                       Sign in to your account
-                    </p>
-                </div>
+                {/* <div className="flex flex-col mb-3 items-center ">
+                    <p className="font-bold">Sign in to your account</p>
+                </div> */}
 
-                <div className="flex flex-col">
-                    {/* <Label htmlFor="email_phone">Email or phone number</Label> */}
-                    <Input
+                <div className="relative">
+                    <FloatingLabelInput
+                        id="EmailOrPhone"
                         className={`w-full ${errors.emailPhone && redFocus}`}
-                        placeholder="Email or Phone"
+                        label="Email or Phone"
                         type="text"
                         {...register("emailPhone", {
-                            required: "This is required",
-                            pattern: /^(?:[^\s@]+@[^\s@]+\.[^\s@]+|\d{10})$/,
-                        })}
-                        onFocus={()=> setUniversalErrorMessage(null)}
-                    />
-                    <p className={errorHintColor}>{errors.emailPhone?.message}</p>
-
-                    {/* <Label htmlFor="Password">Password</Label> */}
-                    <Input
-                        className={`w-full ${errors.password && redFocus}`}
-                        placeholder="Password"
-                        type="password"
-                        {...register("password", {
-                            required: "This is required",
-                            minLength: {
-                                value: 6,
-                                message: "Password must be 6 characters or more.",
+                            required: "Please enter your email or number",
+                            pattern: {
+                                value: /^(?:[^\s@]+@[^\s@]+\.[^\s@]+|\d{10})$/,
+                                message: "Please enter a valid email address"
                             },
                         })}
-                        onFocus={()=> setUniversalErrorMessage(null)}
+                        onFocus={() => setUniversalErrorMessage(null)}
+                    />
+                    <p className={errorHintColor}>{errors.emailPhone?.message}</p>
+                </div>
+
+                <div>
+                    <FloatingPassword<Login>
+                        className={`w-full ${errors.password && redFocus}`}
+                        label="Password"
+                        name="password"
+                        register={register}
+                        minLength={6}
+                        minLenErrorMessage="At least 6 characters needed"
+                        onFocus={() => setUniversalErrorMessage(null)}
                     />
                     <p className={errorHintColor}>{errors.password?.message}</p>
-                    <Button
-                        disabled={isSubmitting}
-                        className={`${
-                            isSubmitting && `disabled:cursor-not-allowed`
-                        } bg-testing hover:bg-blue-500 w-full`}
-                        type="submit"
-                    >
-                        {isSubmitting ? (
-                            <Loader2 className="animate-spin h-4 w-4 mr-2" />
-                        ) : (
-                            "Continue"
-                        )}
-                    </Button>
-
-                    {universalErrorMessage && <p className="text-sm text-red-500 mt-3">{universalErrorMessage}</p>}
-                    {
-                        !universalErrorMessage &&
-                    <Link
-                            href="#"
-                            className=" hover:underline flex justify-start mt-3 text-blue-400 text-sm px-0.5 cursor-pointer"
-                        >
-                            I forgot my password
-                        </Link>
-                    }
                 </div>
+
+
+                <Button
+                    disabled={isSubmitting}
+                    className={`${
+                        isSubmitting && `disabled:cursor-not-allowed`
+                    } bg-testing hover:bg-blue-500 w-full`}
+                    type="submit"
+                >
+                    {isSubmitting ? <Loader2 className="animate-spin h-4 w-4 mr-2" /> : "Continue"}
+                </Button>
+
+                {universalErrorMessage && (
+                    <p className="text-sm text-red-500 mt-3">{universalErrorMessage}</p>
+                )}
+                {!universalErrorMessage && (
+                    <Link
+                        href="#"
+                        className=" hover:underline flex justify-start mt-3 text-blue-400 text-sm px-0.5 cursor-pointer"
+                    >
+                        I forgot my password
+                    </Link>
+                )}
             </form>
         </div>
     );

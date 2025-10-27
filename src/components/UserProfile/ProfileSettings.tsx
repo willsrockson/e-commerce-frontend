@@ -1,6 +1,6 @@
 "use client"
 import {Input} from "@/components/ui/input";
-import {CircleCheck, Pen} from "lucide-react";
+import {CircleCheck, Loader2, Pen} from "lucide-react";
 import {
   Tooltip,
   TooltipContent,
@@ -11,7 +11,6 @@ import {
     AvatarFallback,
     AvatarImage,
 } from "@/components/ui/avatar"
-import {Label} from "@/components/ui/label";
 import {Button} from "@/components/ui/button";
 import useSWR, {mutate} from "swr";
 import {useEffect, useState} from "react";
@@ -22,6 +21,8 @@ import {useRouter} from "next/navigation";
 import {authStore} from "@/store/authStore";
 import { blueFocus } from "../SignUpUi";
 import { toastError, toastSuccess } from "../toasts/toasts";
+import { FloatingLabelInput } from "../ui/floating-label-input";
+import { GH_PHONE_REGEX } from "@/lib/constants";
 
 type UserProfileType = {
     storeName: string;
@@ -73,6 +74,7 @@ export default function ProfileSettings() {
 
     const [submitDataStatus, setSubmitDataStatus] = useState<boolean>(true);
     const [loading, setLoading] = useState(false);
+    const [removeLoading, setRemoveLoading] = useState(false);
 
     const onchangeDebounce = (newData: string, fieldName: string) => {
         setTemporal((prev) => ({ ...prev, [fieldName]: newData }));
@@ -90,12 +92,12 @@ export default function ProfileSettings() {
             formData.append("full_name", temporal.fullName);
         }
 
-        if (original.phonePrimary !== temporal.phonePrimary && temporal.phonePrimary?.trim().length === 10 ) {
+        if (original.phonePrimary !== temporal.phonePrimary && temporal.phonePrimary?.trim().length === 10 && GH_PHONE_REGEX.test(temporal.phonePrimary) ) {
             setSubmitDataStatus(false);
             formData.append("phone_primary", temporal.phonePrimary);
         }
 
-        if (original.phoneSecondary !== temporal.phoneSecondary && temporal.phoneSecondary?.trim().length === 10) {
+        if (original.phoneSecondary !== temporal.phoneSecondary && temporal.phoneSecondary?.trim().length === 10 && GH_PHONE_REGEX.test(temporal.phoneSecondary)) {
             setSubmitDataStatus(false);
             formData.append("phone_secondary", temporal.phoneSecondary);
         }
@@ -135,6 +137,31 @@ export default function ProfileSettings() {
         
     }, [data]);
 
+    async function removeHandler() {
+        try {
+            setRemoveLoading(true);
+            const res = await fetch("/api/account/settings/remove/phone/secondary", {
+                credentials: "include",
+                method: "PATCH",
+                body: null,
+            });
+            const data = await res.json() as {errorMessage: string; successMessage: string;}
+            setRemoveLoading(false)
+            if(!res.ok){
+                toastError({ message: data.errorMessage })
+                return;
+            }
+            await mutate("/api/account/settings")
+            toastSuccess({ message: data.successMessage });
+            router.refresh();
+        } catch (error) {
+             if(error instanceof Error){
+                toastError({message: error.message})
+             }
+             return;
+        }
+    }
+
    
     async function handleSubmitBtn() {
 
@@ -165,7 +192,9 @@ export default function ProfileSettings() {
 
         const data: { publicUrl: string, successMessage: string } = await response.json();
         if (data.publicUrl) {
-            setAvatarUrl(data.publicUrl)
+            setAvatarUrl(data.publicUrl);
+            setAvatar(null);
+            
         }
         await mutate("/api/account/settings")
         setLoading(false);
@@ -183,166 +212,187 @@ export default function ProfileSettings() {
         <>
             <div className="w-full flex justify-center bg-[#ffff] px-4 sm:px-4 py-10 rounded-lg">
                 <section className="w-full max-w-5xl h-fit">
-                <div className="w-full flex justify-center mb-4">
-                    <div className="w-fit h-fit relative">
-                        <div className="relative rounded-full h-20 w-20 bg-gradient-to-r from-[#155dfc] to-violet-500 p-[1px]">
-                            <Avatar className="w-full h-full">
-                                <AvatarImage
-                                    src={`${
-                                        data && data[0]?.image_url + "?id=" + data[0]?.updated_at
-                                    }`}
-                                    alt={original.fullName}
-                                />
-                                <AvatarFallback>{`👤`}</AvatarFallback>
-                            </Avatar>
-                        </div>
+                    <div className="w-full flex justify-center mb-4">
+                        <div className="w-fit h-fit relative">
+                            <div className="relative rounded-full h-20 w-20 bg-gradient-to-r from-[#155dfc] to-violet-500 p-[1px]">
+                                <Avatar className="w-full h-full">
+                                    <AvatarImage
+                                        src={`${
+                                            data &&
+                                            data[0]?.image_url + "?id=" + data[0]?.updated_at
+                                        }`}
+                                        alt={original.fullName}
+                                    />
+                                    <AvatarFallback>{`👤`}</AvatarFallback>
+                                </Avatar>
+                            </div>
 
-                        <div className="absolute translate-x-16 -translate-y-10 bg-blue-200 rounded-full p-1">
-                            <Pen size={15} />
-                            <Input
-                                type="file"
-                                accept="image/*"
-                                className="absolute -translate-y-10 opacity-0 cursor-pointer"
-                                onChange={(e) => {
-                                    if (e.target.files && e.target.files[0]) {
-                                        setAvatar(e.target.files[0]);
-                                    }
-                                }}
+                            <div className="absolute translate-x-16 -translate-y-10 bg-blue-200 rounded-full p-1">
+                                <Pen size={15} />
+                                <Input
+                                    type="file"
+                                    accept="image/*"
+                                    className="absolute -translate-y-10 opacity-0 cursor-pointer"
+                                    onChange={(e) => {
+                                        if (e.target.files && e.target.files[0]) {
+                                            setAvatar(e.target.files[0]);
+                                        }
+                                    }}
+                                />
+                            </div>
+                        </div>
+                    </div>
+
+                    <div className="w-full flex flex-col justify-center gap-x-5 sm:flex-row sm:px-10 lg:px-20 lg:flex-row">
+                        <div className="w-full">
+                            <FloatingLabelInput
+                                className={` ${blueFocus} mt-1 mb-5`}
+                                label="Shop name"
+                                name="storeName"
+                                value={temporal.storeName}
+                                id={"storeName"}
+                                onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                                    onchangeDebounce(e.target.value, e.target.name)
+                                }
                             />
                         </div>
-                    </div>
-                </div>
 
-                <div className="w-full flex flex-col justify-center gap-x-5 sm:flex-row sm:px-10 lg:px-20 lg:flex-row">
-                    <div className="w-full">
-                        <Label htmlFor={"storeName"}>Store Name</Label>
-                        <Input
-                            className={` ${blueFocus} mt-1 mb-5`}
-                            placeholder="What's the name of your shop?"
-                            name="storeName"
-                            value={temporal.storeName}
-                            id={"storeName"}
-                            onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-                                onchangeDebounce(e.target.value, e.target.name)
-                            }
-                        />
+                        <div className="w-full">
+                            {data && data[0]?.id_verification_status === "Not Verified" ? (
+                                <>
+                                    <FloatingLabelInput
+                                        className={`${blueFocus} mt-1 mb-5`}
+                                        label="Full name"
+                                        name="fullName"
+                                        id={"fullName"}
+                                        value={temporal.fullName}
+                                        onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                                            onchangeDebounce(e.target.value, e.target.name)
+                                        }
+                                    />
+                                </>
+                            ) : (
+                                <div className="relative">
+                                    <FloatingLabelInput
+                                        label="Full name"
+                                        className={`${blueFocus} mt-1 mb-5 pr-10`} // padding so text doesn't overlap
+                                        disabled
+                                        id="fullname"
+                                        value={temporal.fullName}
+                                    />
+                                    <Tooltip>
+                                        <TooltipTrigger asChild>
+                                            <CircleCheck className="absolute right-6 top-[70%] -translate-y-1/2 text-green-500 w-5 h-5" />
+                                        </TooltipTrigger>
+                                        <TooltipContent className="max-w-xs p-2 text-xs bg-green-500 text-center break-words leading-snug">
+                                            <p>
+                                                Your ID is now verified. <br />
+                                                To protect your account, editing or <br /> changing
+                                                your name is no longer possible.
+                                            </p>
+                                        </TooltipContent>
+                                    </Tooltip>
+                                </div>
+                            )}
+                        </div>
                     </div>
 
-                    <div className="w-full">
-                        {data && data[0]?.id_verification_status === "Not Verified" ? (
-                            <>
-                                <Label htmlFor={"fullName"}>Full Name</Label>
-                                <Input
+                    <div className="w-full flex flex-col justify-center gap-x-5 sm:flex-row sm:px-10 lg:px-20 lg:flex-row">
+                        <div className="w-full">
+                            <FloatingLabelInput
+                                label="Phone primary"
+                                className={`${blueFocus} mt-1 mb-5`}
+                                type={"number"}
+                                name="phonePrimary"
+                                id={"phonePrimary"}
+                                value={temporal.phonePrimary}
+                                onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                                    onchangeDebounce(e.target.value, e.target.name)
+                                }
+                            />
+                        </div>
+                        <div className="w-full">
+                            <div className="relative mb-5">
+                                <FloatingLabelInput
+                                    label="Phone secondary"
                                     className={`${blueFocus} mt-1 mb-5`}
-                                    placeholder="Want to verify your store? Enter your gov. issued name."
-                                    name="fullName"
-                                    id={"fullName"}
-                                    value={temporal.fullName}
+                                    type={"number"}
+                                    name="phoneSecondary"
+                                    id={"phoneSecondary"}
+                                    value={temporal.phoneSecondary}
                                     onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
                                         onchangeDebounce(e.target.value, e.target.name)
                                     }
                                 />
-                            </>
-                        ) : (
-                            <div className="relative">
-                                <Label htmlFor="fullname">Full Name</Label>
-                                <Input
-                                    className={`${blueFocus} mt-1 mb-5 pr-10`} // padding so text doesn't overlap
-                                    disabled
-                                    id="fullname"
-                                    value={temporal.fullName}
-                                />
-                                <Tooltip>
-                                    <TooltipTrigger asChild>
-                                        <CircleCheck className="absolute right-6 top-[70%] -translate-y-1/2 text-green-500 w-5 h-5" />
-                                    </TooltipTrigger>
-                                    <TooltipContent className="max-w-xs p-2 text-xs bg-green-500 text-center break-words leading-snug">
-                                        <p>
-                                            Your ID is now verified. <br />
-                                            To protect your account, editing or <br /> changing your name
-                                            is no longer possible.
-                                        </p>
-                                    </TooltipContent>
-                                </Tooltip>
+                                { original.phoneSecondary &&
+                                  (<Button
+                                    variant={"ghost"}
+                                    type="button"
+                                    disabled={removeLoading}
+                                    onClick={removeHandler}
+                                    className="absolute right-2 top-1/2 -translate-y-1/2 px-3 py-1 text-sm hover:bg-red-100"
+                                  >
+                                    {removeLoading ? (
+                                        <Loader2 className="animate-spin h-4 w-4 mr-2" />
+                                    ) : (
+                                        <span className="text-red-500 text-xs">Remove</span>
+                                    )}
+                                 </Button>)
+                                }
                             </div>
-                        )}
-                    </div>
-                </div>
-
-                <div className="w-full flex flex-col justify-center gap-x-5 sm:flex-row sm:px-10 lg:px-20 lg:flex-row">
-                    <div className="w-full">
-                        <Label htmlFor={"phonePrimary"}>Phone Primary</Label>
-                        <Input
-                            className={`${blueFocus} mt-1 mb-5`}
-                            type={"number"}
-                            name="phonePrimary"
-                            id={"phonePrimary"}
-                            value={temporal.phonePrimary}
-                            onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-                                onchangeDebounce(e.target.value, e.target.name)
-                            }
-                        />
-                    </div>
-                    <div className="w-full">
-                        <Label htmlFor={"phoneSecondary"}>Phone Secondary</Label>
-                        <Input
+                            {/* <FloatingLabelInput
+                            label="Phone secondary"
                             className={`${blueFocus} mt-1 mb-5`}
                             type={"number"}
                             name="phoneSecondary"
                             id={"phoneSecondary"}
-                            placeholder="Another number buyers can reach you on."
                             value={temporal.phoneSecondary}
                             onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
                                 onchangeDebounce(e.target.value, e.target.name)
                             }
-                        />
+                        /> */}
+                        </div>
                     </div>
-                </div>
 
-                <div className="w-full flex flex-col justify-center sm:flex-row sm:px-10 lg:px-20 lg:flex-row">
-                    <div className="w-full">
-                        <Label htmlFor="storeAddress">Store Address</Label>
-                        <Input
-                            className={`${blueFocus} mt-1 mb-5`}
-                            placeholder="Tell them where your shop is located at."
-                            type="text"
-                            name="storeAddress"
-                            id="storeAddress"
-                            defaultValue={temporal.storeAddress}
-                            onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-                                onchangeDebounce(e.target.value, e.target.name)
-                            }
-                        />
-                    </div>
-                </div>
-
-                <div className="w-full flex flex-col justify-center gap-3 sm:flex-row sm:px-10 lg:px-20 lg:flex-row">
-                    <div className="w-full flex flex-col justify-end">
-                        {isLoading ? (
-                            <BeatLoaderUI
-                                className="w-full max-w-7xl m-auto mb-6 flex justify-center pt-4"
-                                color="blue"
-                                size={10}
+                    <div className="w-full flex flex-col justify-center sm:flex-row sm:px-10 lg:px-20 lg:flex-row">
+                        <div className="w-full">
+                            <FloatingLabelInput
+                                className={`${blueFocus} mt-1 mb-5`}
+                                label="Shop address"
+                                type="text"
+                                name="storeAddress"
+                                id="storeAddress"
+                                defaultValue={temporal.storeAddress}
+                                onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                                    onchangeDebounce(e.target.value, e.target.name)
+                                }
                             />
-                        ) : (
-                            <Button
-                                className={`${loading && "pointer-events-none bg-gray-400"} w-full`}
-                                disabled={submitDataStatus}
-                                onClick={handleSubmitBtn}
-                            >
-                                {loading ? (
-                                    "Saving..."
-                                ) : (
-                                    <>
-                                        Save changes
-                                    </>
-                                )}
-                            </Button>
-                        )}
+                        </div>
                     </div>
 
-                    <div className="w-full"></div>
-                </div>
+                    <div className="w-full flex flex-col justify-center gap-3 sm:flex-row sm:px-10 lg:px-20 lg:flex-row">
+                        <div className="w-full flex flex-col justify-end">
+                            {isLoading ? (
+                                <BeatLoaderUI
+                                    className="w-full max-w-7xl m-auto mb-6 flex justify-center pt-4"
+                                    color="blue"
+                                    size={10}
+                                />
+                            ) : (
+                                <Button
+                                    className={`${
+                                        loading && "pointer-events-none bg-gray-400"
+                                    } w-full`}
+                                    disabled={submitDataStatus}
+                                    onClick={handleSubmitBtn}
+                                >
+                                    {loading ? "Saving..." : <>Save changes</>}
+                                </Button>
+                            )}
+                        </div>
+
+                        <div className="w-full"></div>
+                    </div>
                 </section>
             </div>
         </>

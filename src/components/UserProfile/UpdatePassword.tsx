@@ -1,13 +1,12 @@
 "use client"
-import {Label} from "@/components/ui/label";
-import {Input} from "@/components/ui/input";
 import {Button} from "@/components/ui/button";
 import { errorHintColor, redFocus } from "../SignUpUi";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { Loader2 } from "lucide-react";
 import { toastError, toastSuccess } from "../toasts/toasts";
+import FloatingPassword from "../sharedUi/floating-password";
 
-interface IDataTypes{
+interface UpdatePassword{
     currentPassword: string;
     newPassword: string;
     confirmPassword: string;
@@ -15,13 +14,13 @@ interface IDataTypes{
 
 export default function UpdatePassword() {
    
-    const { register, handleSubmit ,watch, formState:{errors, isSubmitting} } = useForm<IDataTypes>({
+    const { register, handleSubmit ,watch, formState:{errors, isSubmitting} } = useForm<UpdatePassword>({
         mode: 'onBlur'
     });
 
     const watchNewPassword = watch('newPassword');
 
-    const submitUpdate: SubmitHandler<IDataTypes> = async (data)=>{
+    const submitUpdate: SubmitHandler<UpdatePassword> = async (data)=>{
     
         try {
             const response = await fetch("/api/account/update/password", {
@@ -65,34 +64,43 @@ export default function UpdatePassword() {
             <div className="w-full max-w-5xl flex flex-col justify-center gap-3 sm:px-28 md:px-52 lg:px-60 mb-4">
                 <form onSubmit={handleSubmit(submitUpdate)}>
                     <div className="w-full">
-                        <Label htmlFor="currentPassword">Current password</Label>
-                        <Input
-                            className={errors.currentPassword && redFocus}
-                            type="password"
-                            {...register("currentPassword", {
-                                required: "This is required",
-                                minLength: 6,
-                            })}
+                        <FloatingPassword<UpdatePassword>
+                            className={`w-full ${errors.currentPassword && redFocus}`}
+                            label="Current password"
+                            name="currentPassword"
+                            register={register}
+                            minLength={6}
+                            minLenErrorMessage="At least 6 characters needed"
                         />
                         <p className={errorHintColor}>{errors.currentPassword?.message}</p>
                     </div>
 
                     <div className="w-full">
-                        <Label htmlFor={"newPassword"}>New password</Label>
-                        <Input
-                            className={errors.newPassword && redFocus}
-                            type={"password"}
-                            {...register("newPassword", {
-                                required: "This is required",
-                                minLength: 6,
-                            })}
+                        <FloatingPassword<UpdatePassword>
+                            className={`w-full ${errors.newPassword && redFocus}`}
+                            label="New password"
+                            name="newPassword"
+                            register={register}
+                            minLength={6}
+                            minLenErrorMessage="At least 6 characters needed"
                         />
+
                         <p className={errorHintColor}>{errors.newPassword?.message}</p>
                     </div>
 
                     <div className="w-full">
-                        <Label htmlFor={"confirmPassword"}>Confirm password</Label>
-                        <Input
+                        <FloatingPassword<UpdatePassword>
+                            className={`w-full ${errors.confirmPassword && redFocus}`}
+                            label="Confirm new password"
+                            name="confirmPassword"
+                            register={register}
+                            minLength={6}
+                            minLenErrorMessage="At least 6 characters needed"
+                            confirmPassword={true}
+                            takeConfirmPassword={watchNewPassword}
+                        />
+
+                        {/* <Input
                             className={errors.confirmPassword && redFocus}
                             type="password"
                             {...register("confirmPassword", {
@@ -101,7 +109,7 @@ export default function UpdatePassword() {
                                 validate: (value) =>
                                     value === watchNewPassword || "Password mismatch",
                             })}
-                        />
+                        /> */}
                         <p className={errorHintColor}>{errors.confirmPassword?.message}</p>
                     </div>
 

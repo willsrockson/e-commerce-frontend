@@ -33,7 +33,13 @@ html {
 html {
   scrollbar-width: none; /* Hide scrollbar */
 }
-
+/* Disable browser background color for auto fill texts */
+input:-webkit-autofill,
+input:-webkit-autofill:hover, 
+input:-webkit-autofill:focus, 
+input:-webkit-autofill:active{
+    -webkit-box-shadow: 0 0 0 30px white inset !important;
+}
 
 @theme{
   --background-image-empty-box: url('/images/empty-box.webp');

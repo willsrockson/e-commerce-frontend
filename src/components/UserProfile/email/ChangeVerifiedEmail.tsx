@@ -1,15 +1,14 @@
 "use client";
 import { useForm, SubmitHandler } from "react-hook-form";
-import { Label } from "@/components/ui/label";
-import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import useSWR, { mutate } from "swr";
-import { Loader2 } from "lucide-react";
+import { CircleCheckBig, Loader2 } from "lucide-react";
 import { errorHintColor, redFocus } from "@/components/SignUpUi";
 import {useState } from "react";
 import { IDataFromServer } from "./changeNotVerifiedEmail";
 import { toastError, toastSuccess } from "@/components/toasts/toasts";
 import { useRouter } from "next/navigation";
+import { FloatingLabelInput } from "@/components/ui/floating-label-input";
 
  interface IFormType {
             newEmail: string;
@@ -48,17 +47,12 @@ export default function ChangeVerifiedEmail() {
              })
          } catch (error) {
               if(error instanceof Error){
-                console.error(error.message);
                 toastError({
                     message: error.message,
                 })
                 return;
               }
-              console.error(String(error));
-                toastError({
-                    message: 'Something unexpected happen, please retry.'
-                })
-                return;
+              
          }
     }
 
@@ -86,13 +80,10 @@ export default function ChangeVerifiedEmail() {
                 toastSuccess({ message: responseData.successMessage });
             } catch (error) {
                 if (error instanceof Error) {
-                    console.error(error.message);
                     toastError({ message: "Code request failed" });
                     return;
                 }
-                console.error(String(error));
-                toastError({ message: "Code request failed" });
-                return;
+               
             }
         };
  
@@ -102,10 +93,11 @@ export default function ChangeVerifiedEmail() {
             <div className="w-full max-w-5xl flex flex-col justify-center gap-3 sm:px-28 md:px-52 lg:px-60 mb-4">
                 <form onSubmit={handleSubmit(submit)}>
                     <div className="w-full">
-                        <Label htmlFor="yourEmail">Your email</Label>
+                        
                         <div className="relative mb-5">
-                        <Input
+                        <FloatingLabelInput
                             className={`pr-10`} // padding so text doesn't overlap
+                            label="Your email"
                             disabled
                             name="yourEmail"
                             id="yourEmail"
@@ -113,19 +105,20 @@ export default function ChangeVerifiedEmail() {
                         />
                         <span className="flex text-[#22c55e] items-center gap-1 absolute right-2 top-1/2 -translate-y-1/2 px-3 py-1 text-sm">
                                 
-                                Confirmed
+                                <CircleCheckBig size={15}/>Verified
                             </span>
                         </div>
                         
                     </div>
 
                     <div className="w-full">
-                        <Label htmlFor={"newEmail"}>New email</Label>
-                        <Input
+                        <FloatingLabelInput
+                            id="newEmail"
+                            label="New email"
                             type={"email"}
                             className={errors.newEmail ? redFocus : ""}
                             {...register("newEmail", {
-                                required: "This is required.",
+                                required: "Please enter a valid email address.",
                                 pattern: /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/,
                             })}
                         />
@@ -133,28 +126,37 @@ export default function ChangeVerifiedEmail() {
                     </div>
 
                     <div className="w-full">
-                        <Label htmlFor={"confirmNewEmail"}>Confirm new email</Label>
-                        <Input
+                       
+                        <FloatingLabelInput
+                            id="confirmNewEmail"
+                            label="Confirm new email"
                             type={"email"}
                             className={errors.confirmEmail ? redFocus : ""}
                             {...register("confirmEmail", {
-                                required: "This is required",
-                                pattern: /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/,
+                                required: "Please confirm your email address",
+                                pattern: {
+                                    value: /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/,
+                                    message: "Please enter a valid email address"
+                                },
                                 validate: (value) =>
-                                    value === newEmailWatch || 'Emails do not match'
+                                    value === newEmailWatch || 'Email mismatch'
                             })}
                         />
                         <p className={errorHintColor}>{errors.confirmEmail?.message}</p>
                     </div>
 
                     <div className="w-full ">
-                        <Label htmlFor={"otpCode"}>Enter 6-digit code</Label>
+                         <ol className="text-xs text-gray-500 mt-1 mb-2 pl-2 text-right">
+                         <li>Requested code will be sent to your current email</li>
+                       </ol>
                         <div className="relative">
-                            <Input
+                            <FloatingLabelInput
+                                id="otpCode"
+                                label="Enter 6-digit code"
                                 type={"number"}
                                 className={`${errors.otpCode ? redFocus : ""} pr-20`}
                                 {...register("otpCode", {
-                                    required: "This is required",
+                                    required: "Please enter your verification code",
                                     minLength: { value: 6, message: "Minimum 6 digits" },
                                     maxLength: { value: 6, message: "Maximum 6 digits" },
                                 })}
@@ -169,13 +171,11 @@ export default function ChangeVerifiedEmail() {
                                {loading ? (<Loader2 className="animate-spin h-4 w-4 mr-2" />) : "Get Code"}
                             </Button>
                         </div>
-
-                        <p className={errorHintColor}>{errors.otpCode?.message}</p>
+                        
+                        <p className={errorHintColor + ""}>{errors.otpCode?.message}</p>
                     </div>
 
-                    <ol className="text-xs text-gray-500 mt-1 mb-5">
-                        <li>Requested code will be sent to your current email</li>
-                    </ol>
+                    
 
                     <div className="w-full pt-2">
                         <Button disabled={isSubmitting} type="submit" className="w-full">{isSubmitting ? (<Loader2 className="animate-spin h-4 w-4 mr-2" />) : "Update email"}</Button>
