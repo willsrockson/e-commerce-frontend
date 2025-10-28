@@ -74,3 +74,21 @@
 //     }
 
 //     return NextResponse.next();
+
+
+
+//  <Button
+//      variant={"ghost"}
+//      type="button"
+//      disabled={removeLoading}
+//      onClick={removeHandler}
+//      className="absolute right-2 top-1/2 -translate-y-1/2 px-3 py-1 text-sm hover:bg-red-100"
+//  >
+//      {removeLoading ? (
+//          <Loader2 className="animate-spin h-4 w-4 mr-2" />
+//      ) : (
+//          <span className="text-red-500 text-xs">Remove</span>
+//      )}
+//  </Button>;
+
+

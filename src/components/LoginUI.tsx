@@ -1,6 +1,6 @@
 "use client";
 import { Button } from "./ui/button";
-import Link from "next/link";
+
 import { useEffect, useState } from "react";
 import { Loader2 } from "lucide-react";
 import { useRouter } from "next/navigation";
@@ -10,6 +10,9 @@ import { toastError } from "./toasts/toasts";
 import { useForm, SubmitHandler } from "react-hook-form";
 import { FloatingLabelInput } from "./ui/floating-label-input";
 import FloatingPassword from "./sharedUi/floating-password";
+import ResetPassword from "./ResetPassword";
+import { EMAIL_GHANA_PHONE_REGEX } from "@/lib/constants";
+
 
 export interface userLoginUIProps {
     isValidUser: boolean;
@@ -96,8 +99,8 @@ export default function LoginUi() {
                         {...register("emailPhone", {
                             required: "Please enter your email or number",
                             pattern: {
-                                value: /^(?:[^\s@]+@[^\s@]+\.[^\s@]+|\d{10})$/,
-                                message: "Please enter a valid email address"
+                                value: EMAIL_GHANA_PHONE_REGEX,
+                                message: "Please enter a valid email address or phone.",
                             },
                         })}
                         onFocus={() => setUniversalErrorMessage(null)}
@@ -118,7 +121,6 @@ export default function LoginUi() {
                     <p className={errorHintColor}>{errors.password?.message}</p>
                 </div>
 
-
                 <Button
                     disabled={isSubmitting}
                     className={`${
@@ -132,15 +134,12 @@ export default function LoginUi() {
                 {universalErrorMessage && (
                     <p className="text-sm text-red-500 mt-3">{universalErrorMessage}</p>
                 )}
-                {!universalErrorMessage && (
-                    <Link
-                        href="#"
-                        className=" hover:underline flex justify-start mt-3 text-blue-400 text-sm px-0.5 cursor-pointer"
-                    >
-                        I forgot my password
-                    </Link>
-                )}
+                
             </form>
+
+            {!universalErrorMessage && (
+                    <ResetPassword />
+                )}
         </div>
     );
 }

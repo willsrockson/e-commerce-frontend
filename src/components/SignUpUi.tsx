@@ -131,7 +131,7 @@ export default function SignUpUi() {
                             required: "Please enter your email address.",
                             pattern: {
                                 value: /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/,
-                                message: "Please enter a valid email address"
+                                message: "Please enter a valid email address."
                             },
                         })}
                         onFocus={() => setUniversalErrorMessage(null)}

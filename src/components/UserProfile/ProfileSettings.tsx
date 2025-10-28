@@ -1,6 +1,6 @@
 "use client"
 import {Input} from "@/components/ui/input";
-import {CircleCheck, Loader2, Pen} from "lucide-react";
+import {CircleCheck, Pen} from "lucide-react";
 import {
   Tooltip,
   TooltipContent,
@@ -16,6 +16,18 @@ import useSWR, {mutate} from "swr";
 import {useEffect, useState} from "react";
 import BeatLoaderUI from "@/components/loaders/BeatLoader";
 import {useRouter} from "next/navigation";
+import {
+    AlertDialog,
+    AlertDialogAction,
+    AlertDialogCancel,
+    AlertDialogContent, 
+    AlertDialogDescription, 
+    AlertDialogFooter,
+    AlertDialogHeader,
+    AlertDialogTitle,
+    AlertDialogTrigger
+} from "@/components/ui/alert-dialog";
+import { Spinner } from "@/components/ui/spinner"
 
 
 import {authStore} from "@/store/authStore";
@@ -324,33 +336,57 @@ export default function ProfileSettings() {
                                         onchangeDebounce(e.target.value, e.target.name)
                                     }
                                 />
-                                { original.phoneSecondary &&
-                                  (<Button
-                                    variant={"ghost"}
-                                    type="button"
-                                    disabled={removeLoading}
-                                    onClick={removeHandler}
-                                    className="absolute right-2 top-1/2 -translate-y-1/2 px-3 py-1 text-sm hover:bg-red-100"
-                                  >
-                                    {removeLoading ? (
-                                        <Loader2 className="animate-spin h-4 w-4 mr-2" />
-                                    ) : (
-                                        <span className="text-red-500 text-xs">Remove</span>
-                                    )}
-                                 </Button>)
-                                }
+                                {original.phoneSecondary && (
+                                    <AlertDialog>
+                                        <AlertDialogTrigger asChild>
+                                            <Button
+                                                variant={"ghost"}
+                                                type="button"
+                                                disabled={removeLoading}
+                                                className="absolute right-2 top-1/2 -translate-y-1/2 px-3 py-1 text-sm hover:bg-red-100"
+                                            >
+                                                {removeLoading ? (
+                                                   <Spinner />
+                                                ) : (
+                                                    <span className="text-red-500 text-xs">
+                                                        Remove
+                                                    </span>
+                                                )}
+                                            </Button>
+                                        </AlertDialogTrigger>
+                                        <AlertDialogContent>
+                                            <AlertDialogHeader>
+                                                <AlertDialogTitle>
+                                                   Remove Secondary Phone?
+                                                </AlertDialogTitle>
+                                                <AlertDialogDescription>
+                                                    This action will remove your secondary phone 
+                                                    number and make it 
+                                                    unavailable to buyers.
+                                                    Confirm to proceed.
+                                                </AlertDialogDescription>
+                                            </AlertDialogHeader>
+                                            <AlertDialogFooter>
+                                                <AlertDialogCancel>Cancel</AlertDialogCancel>
+                                                <AlertDialogAction asChild>
+                                                    <Button
+                                                        variant={"outline"}
+                                                        type="button"
+                                                        disabled={removeLoading}
+                                                        onClick={removeHandler}
+                                                        className="bg-primary-foreground text-sm hover:bg-red-100"
+                                                    >
+                                                       <span className="text-red-500 text-xs">
+                                                              Confirm
+                                                        </span>
+                                                    </Button>
+                                                </AlertDialogAction>
+                                            </AlertDialogFooter>
+                                        </AlertDialogContent>
+                                    </AlertDialog>
+                                )}
                             </div>
-                            {/* <FloatingLabelInput
-                            label="Phone secondary"
-                            className={`${blueFocus} mt-1 mb-5`}
-                            type={"number"}
-                            name="phoneSecondary"
-                            id={"phoneSecondary"}
-                            value={temporal.phoneSecondary}
-                            onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-                                onchangeDebounce(e.target.value, e.target.name)
-                            }
-                        /> */}
+                            
                         </div>
                     </div>
 
