@@ -11,13 +11,14 @@ type MainElectronicsType = {
     me_description: string;
     me_title: string;
     me_files: File[];
+    renderNextPage: (state: boolean)=> void;
 }
 
 //Dynamic imports of subs
 const MobilePhonesSub = dynamic(()=> import('./Subs/MobilePhonesSub'))
 
 const MainElectronics = ({ me_region, me_town, me_mainCategory , me_subCategory, 
-               me_description, me_title, me_files  }: MainElectronicsType) => {
+               me_description, me_title, me_files, renderNextPage  }: MainElectronicsType) => {
    
     function SubCategorySelection(subCategory: string) {
         switch (subCategory) {
@@ -31,6 +32,7 @@ const MainElectronics = ({ me_region, me_town, me_mainCategory , me_subCategory,
                         takeFiles={me_files}
                         takeDescription={me_description}
                         takeTitle={me_title}
+                        renderNextPage={renderNextPage}
                     />
                 );
             default:

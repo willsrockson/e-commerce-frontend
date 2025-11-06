@@ -13,6 +13,7 @@ import PriceShared from "@/components/sharedUi/price";
 import CheckBoxSelectShared from "@/components/sharedUi/checkbox-select";
 import useSWR from "swr";
 import BeatLoaderUI from "@/components/loaders/BeatLoader";
+import { Spinner } from "@/components/ui/spinner";
 
 interface MobilePhoneSubType {
     takeRegion: string;
@@ -22,6 +23,7 @@ interface MobilePhoneSubType {
     takeFiles: File[] | null;
     takeDescription: string;
     takeTitle: string;
+    renderNextPage: (state: boolean)=> void;
 }
 
 
@@ -66,7 +68,7 @@ interface IModel{
 }
 
 
-const MobilePhonesSub = ({ takeRegion, takeTown, takeMainCategory, takeSubCategory, takeFiles, takeDescription, takeTitle,
+const MobilePhonesSub = ({ takeRegion, takeTown, takeMainCategory, takeSubCategory, takeFiles, takeDescription, takeTitle, renderNextPage
                         }: MobilePhoneSubType) => {
 
     const fetcher = (url: URL) => fetch(url).then((res) => res.json());
@@ -106,6 +108,8 @@ const MobilePhonesSub = ({ takeRegion, takeTown, takeMainCategory, takeSubCatego
     
    
     const handleListingSubmission: SubmitHandler<IContentFormType> = async(data) => {
+       
+       renderNextPage(false)
        const BRAND = "Apple";
        try {
            if (data.brand === BRAND && !data.battery_health.trim()) {
@@ -170,12 +174,15 @@ const MobilePhonesSub = ({ takeRegion, takeTown, takeMainCategory, takeSubCatego
            });
            
            const resFromServer = await res.json() as  { successMessage: string; errorMessage: string; };
+
+           renderNextPage(true)
            if(!res.ok){
               toastError({
                 message: resFromServer.errorMessage
               });
               return;
            }
+
            formData.delete('accessories');
            formData.delete('adImages');
            toastSuccess({
@@ -184,7 +191,7 @@ const MobilePhonesSub = ({ takeRegion, takeTown, takeMainCategory, takeSubCatego
 
        } catch (error) {
           if(error instanceof Error){
-             console.error(String(error));
+             renderNextPage(true)
              toastError({
                 message: 'Oops! An unexpected error happened.'
               });
@@ -586,9 +593,9 @@ const MobilePhonesSub = ({ takeRegion, takeTown, takeMainCategory, takeSubCatego
                         <Button
                             type="submit"
                             disabled={isSubmitting}
-                            className="bg-blue-600"
+                            className="bg-blue-600 min-w-32"
                         >
-                            {isSubmitting ? "Publishing..." : "Publish"}
+                            {isSubmitting ? <Spinner /> : "Publish"}
                         </Button>
                     </div>
                 </div>

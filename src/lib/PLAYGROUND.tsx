@@ -92,3 +92,16 @@
 //  </Button>;
 
 
+
+// /* Hide scrollbar for WebKit browsers */
+// ::-webkit-scrollbar {
+//   display: none;
+// }
+// /* Hide scrollbar for IE/legacy Edge */
+// html {
+//   -ms-overflow-style: none; /* Hide scrollbar */
+// }
+// /* Hide scrollbar for Firefox */
+// html {
+//   scrollbar-width: none; /* Hide scrollbar */
+// }

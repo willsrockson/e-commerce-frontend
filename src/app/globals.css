@@ -21,18 +21,10 @@ input[type=number] {
   -moz-appearance: textfield;
 }
 
-/* Hide scrollbar for WebKit browsers */
-::-webkit-scrollbar {
-  display: none;
+*{
+  scrollbar-width: thin;
 }
-/* Hide scrollbar for IE/legacy Edge */
-html {
-  -ms-overflow-style: none; /* Hide scrollbar */
-}
-/* Hide scrollbar for Firefox */
-html {
-  scrollbar-width: none; /* Hide scrollbar */
-}
+
 /* Disable browser background color for auto fill texts */
 input:-webkit-autofill,
 input:-webkit-autofill:hover, 
@@ -170,4 +162,6 @@ input:-webkit-autofill:active{
     @apply bg-background text-foreground;
   }
 }
+
+
 

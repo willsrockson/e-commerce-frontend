@@ -13,7 +13,7 @@ import {
 } from "@/components/ui/avatar"
 import {Button} from "@/components/ui/button";
 import useSWR, {mutate} from "swr";
-import {useEffect, useState} from "react";
+import {useEffect, useMemo, useState} from "react";
 import BeatLoaderUI from "@/components/loaders/BeatLoader";
 import {useRouter} from "next/navigation";
 import {
@@ -64,8 +64,10 @@ export default function ProfileSettings() {
     const {data, isLoading} = useSWR<UserDataFromServer[]>("/api/account/settings", fetcher);
 
     const setAvatarUrl = authStore((state) => (state.setAvatarUrl))
+    
     // eslint-disable-next-line react-hooks/exhaustive-deps
     const formData = new FormData();
+    const profilePicFormData = useMemo(()=> new FormData(), []);
     const [avatar, setAvatar] = useState<File | null>(null);
      
     //Original state
@@ -90,7 +92,47 @@ export default function ProfileSettings() {
 
     const onchangeDebounce = (newData: string, fieldName: string) => {
         setTemporal((prev) => ({ ...prev, [fieldName]: newData }));
-    }; 
+    };
+    
+    
+    useEffect(()=>{
+        if(avatar == null) return;
+        profilePicFormData.set("avatar", avatar);
+
+        async function updateProfilePicture() {
+
+        if(profilePicFormData.entries().next().done){
+          toastError({
+            message: "No photo selected"
+          })
+          return;
+        }
+
+        const response = await fetch("/api/account/settings/profile/picture", {
+                credentials: 'include',
+                method: "POST",
+                body: profilePicFormData
+            }
+        );
+        const data: { publicUrl: string, successMessage: string; errorMessage: string; } = await response.json();
+
+        if (!response.ok) {
+            setAvatar(null);
+            toastError({message: data.errorMessage})
+            
+        }
+        console.log(data);
+        
+        await mutate("/api/account/settings")
+        setAvatarUrl(data.publicUrl);
+        setAvatar(null);
+        toastSuccess({message: data.successMessage})
+        
+    }
+
+    updateProfilePicture();
+
+    }, [avatar, profilePicFormData, setAvatarUrl])
             
             
     useEffect(() => {
@@ -119,12 +161,8 @@ export default function ProfileSettings() {
             formData.append("store_address", temporal.storeAddress);
         }
 
-        if (avatar !== null) {
-            setSubmitDataStatus(false);
-            formData.append("avatar", avatar);
-        }
-
-    }, [formData, original, temporal, avatar]);
+       
+    }, [formData, original, temporal]);
 
 
     useEffect(() => {
@@ -174,6 +212,7 @@ export default function ProfileSettings() {
         }
     }
 
+
    
     async function handleSubmitBtn() {
 
@@ -190,26 +229,18 @@ export default function ProfileSettings() {
                 body: formData
             }
         );
-
+        
+         const data: { successMessage: string; errorMessage: string  } = await response.json();
+          setLoading(false);
         if (!response.ok) {
-            setLoading(false);
-            const data: { publicUrl: string, errorMessage: string } = await response.json();
               toastError({
-            message: data?.errorMessage ?? "Something went wrong, please retry."
+            message: data?.errorMessage
           })
           return;
-
         }
 
-
-        const data: { publicUrl: string, successMessage: string } = await response.json();
-        if (data.publicUrl) {
-            setAvatarUrl(data.publicUrl);
-            setAvatar(null);
-            
-        }
+       
         await mutate("/api/account/settings")
-        setLoading(false);
         setSubmitDataStatus(false);
         toastSuccess({
             message: data?.successMessage,

@@ -1,6 +1,6 @@
 import { currency } from "@/lib/helpers/universal-functions";
 import { Badge } from "./ui/badge"
-import {CheckCircle} from "lucide-react";
+import {CircleCheckBig} from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 
@@ -24,10 +24,6 @@ enum VerificationStatus{
 
 export default function ProductsCard({id, firstImageUrl, price, title, condition, location, description , createdAt, isVerifiedStore }: CardProps) {
 
-    // function truncateChars(text: string, maxLength: number) {
-    //     if (text.length <= maxLength) return text;
-    //     return text.slice(0, text.lastIndexOf(" ", maxLength)) + "..."; 
-    // }
     // Helper function to format date
     const formatDate = (dateString: string) => {
         const date = new Date(dateString);
@@ -42,10 +38,10 @@ export default function ProductsCard({id, firstImageUrl, price, title, condition
         } else if (diffDays < 7) {
             return `${diffDays} days ago`;
         } else {
-            return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+            return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
         }
     };
-
+   
     return (
         <Link
             href={id}
@@ -57,19 +53,26 @@ export default function ProductsCard({id, firstImageUrl, price, title, condition
                         src={firstImageUrl}
                         alt={title}
                         fill
-                        className="object-cover transition-transform duration-300 group-hover:scale-105"
+                        className="object-cover" //transition-transform duration-300 group-hover:scale-105
                         sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
                         priority={true}
                         quality={85}
                     />
 
                     {isVerifiedStore === VerificationStatus.Verified && (
-                        <Badge
-                            variant="secondary"
-                            className="absolute bottom-2 left-2 gap-1 bg-[#E0FBE2] text-green-700"
-                        >
-                            <CheckCircle className="h-3 w-3" /> Verified
-                        </Badge>
+                        // <Badge
+                        //     variant="outline"
+                        //     className="absolute bottom-2 left-2 gap-3 bg-[#E0FBE2] text-green-700"
+                        // >
+                            
+                        // </Badge>
+                       
+                        <div className="absolute top-0 right-0 rounded-md flex items-center m-1">
+                             <div className=" flex items-center bg-white text-black rounded-md text-xs px-2 py-1 gap-1" >
+                                <CircleCheckBig size={15} /> Verified
+                              </div>
+                        </div>
+                       
                     )}
                 </div>
 
@@ -85,7 +88,7 @@ export default function ProductsCard({id, firstImageUrl, price, title, condition
                            <Badge variant={'secondary'} className="text-gray-500">
                             <span>{condition}</span>
                         </Badge>
-                        <Badge variant={'outline'} className="text-gray-500">
+                        <Badge variant={'secondary'} className="text-gray-500">
                             <span>{formatDate(createdAt.toString())}</span>
                         </Badge>
                        </div>

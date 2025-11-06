@@ -16,7 +16,7 @@ export default function PopularBrands({setColor, watchBrand, items}: IPopularBra
             {items.map((data) => (
                 <div
                     key={data.brand}
-                    className={`${watchBrand === data.brand ? 'bg-[#C9DAFF]' : defaultBgColor } w-24 h-12 hover:bg-[#C9DAFF] flex items-center justify-center border rounded-lg p-4 cursor-pointer`}
+                    className={`${watchBrand === data.brand ? 'bg-[#d6e1f9]' : defaultBgColor } w-24 h-12 hover:bg-[#d6e1f9] flex items-center border justify-center rounded-lg p-4 cursor-pointer`}
                     onClick={()=> setColor(data.brand)}
                 >
                     <div className="relative w-20 h-9">

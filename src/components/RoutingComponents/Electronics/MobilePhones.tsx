@@ -266,7 +266,7 @@ export default function MobilePhones() {
 
     // bg-[#EBF1F4]
     return (
-        <div className="w-full min-h-[calc(100vh-4rem)] pt-6 bg-[#EBF1F4]">
+        <div className="w-full min-h-[calc(100vh-4rem)] pt-6">
             <form>
                 <div className={`w-full ${siteMaxWidth} m-auto mb-6 px-4`}>
                     <Badge
@@ -287,10 +287,10 @@ export default function MobilePhones() {
                                 </p>
                             </div>
 
-                            <section className="w-screen lg:w-full scrollbar-thin scrollbar-thumb-blue-200 scrollbar-track-gray-100 scroll-smooth overflow-x-scroll flex flex-row lg:flex-col gap-2 pl-1">
+                            <div className="w-screen lg:w-full scrollbar-thin scrollbar-thumb-blue-200 scrollbar-track-gray-100 scroll-smooth overflow-x-scroll flex flex-row lg:flex-col gap-4">
                                 {/* 1st Card Below */}
 
-                                <div className="bg-cardBg border shadow-md px-4 py-4 flex flex-col lg:flex-col gap-4 my-3 rounded-lg min-w-72 lg:w-full">
+                                <div className="bg-cardBg border shadow-md px-4 py-4 flex flex-col lg:flex-col gap-4 rounded-lg min-w-72 lg:w-full">
                                     {/* item 1 */}
                                     <div className="w-full">
                                         <Label
@@ -345,7 +345,7 @@ export default function MobilePhones() {
 
                                 {/*  2nd Card Below  */}
 
-                                <div className="bg-cardBg border shadow-md px-4 py-4 flex flex-col lg:flex-col gap-4 my-3 rounded-lg min-w-72 lg:w-full">
+                                <div className="bg-cardBg border shadow-md px-4 py-4 flex flex-col lg:flex-col gap-4 rounded-lg min-w-72 lg:w-full">
                                     {/* item 1 */}
                                     <div className="w-full">
                                         <Label
@@ -401,7 +401,7 @@ export default function MobilePhones() {
 
                                 {/* 3rd Card */}
 
-                                <div className="bg-cardBg border shadow-md px-4 py-4 flex flex-col lg:flex-col gap-4 my-3 rounded-lg min-w-72 lg:w-full">
+                                <div className="bg-cardBg border shadow-md px-4 py-4 flex flex-col lg:flex-col gap-4 rounded-lg min-w-72 lg:w-full">
                                     {/* Item 1 */}
                                     <div className="w-full">
                                         <Label
@@ -485,7 +485,7 @@ export default function MobilePhones() {
 
                                 {/* Card 4 */}
 
-                                <div className="bg-cardBg border shadow-md px-4 py-4 flex flex-col lg:flex-col gap-4 my-3 rounded-lg min-w-72 lg:w-full ">
+                                <div className="bg-cardBg border shadow-md px-4 py-4 flex flex-col lg:flex-col gap-4 rounded-lg min-w-72 lg:w-full ">
                                     {/* Item 1 */}
                                     <div className="w-full">
                                         <Label
@@ -541,7 +541,7 @@ export default function MobilePhones() {
 
                                 {/* Card 5 */}
 
-                                <div className="bg-cardBg border shadow-md px-4 py-4 flex flex-col lg:flex-col gap-4 my-3 rounded-lg min-w-72 lg:w-full ">
+                                <div className="bg-cardBg border shadow-md px-4 py-4 flex flex-col lg:flex-col gap-4 rounded-lg min-w-72 lg:w-full ">
                                     {/* Item 1 */}
                                     <div className="w-full">
                                         <Label
@@ -583,7 +583,7 @@ export default function MobilePhones() {
 
                                 {/* Card 6 */}
 
-                                <div className="bg-cardBg border shadow-md px-4 py-4 flex flex-col lg:flex-col gap-4 my-3 rounded-lg min-w-72 lg:w-full ">
+                                <div className="bg-cardBg border shadow-md px-4 py-4 flex flex-col lg:flex-col gap-4 rounded-lg min-w-72 lg:w-full ">
                                     {/* Item 1 */}
                                     <div className="w-full">
                                         <Label
@@ -625,7 +625,7 @@ export default function MobilePhones() {
 
                                 {/* Card 7 */}
 
-                                <div className="bg-cardBg border shadow-md px-4 py-4 flex flex-col lg:flex-col gap-4 my-3 rounded-lg min-w-72 lg:w-full ">
+                                <div className="bg-cardBg border shadow-md px-4 py-4 flex flex-col lg:flex-col gap-4 rounded-lg min-w-72 lg:w-full ">
                                     {/* Item One */}
                                     <section className="grid w-full items-center gap-1.5">
                                         <Label htmlFor="verified_seller">Seller status</Label>
@@ -645,7 +645,7 @@ export default function MobilePhones() {
                                 <div className="w-20 h-fit opacity-0">
                                     <p>Spacer</p>
                                 </div>
-                            </section>
+                            </div>
 
                             {/* <div>
                                 <Button onClick={()=> reset() } variant={"outline"}>
@@ -660,7 +660,7 @@ export default function MobilePhones() {
                         <p className="font-semibold text-lg text-gray-800 mb-3">
                                 Some popular brands
                             </p>
-                        <div className="w-full min-h-fit overflow-x-auto mb-6">
+                        <div className="w-full min-h-fit overflow-x-auto mb-10">
                             
                             <PopularBrands
                                 items={popularBrands}
@@ -689,7 +689,7 @@ export default function MobilePhones() {
                                 {( list.items.length === 0 && metadata.hasMore == false ) ? (
                                     <div className="w-full bg-empty-box bg-no-repeat bg-center h-72"></div>
                                 ) : (
-                                    <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-3 xl:grid-cols-4 gap-2 sm:gap-4 w-full">
+                                    <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-3 xl:grid-cols-4 gap-2 sm:gap-2 w-full">
                                         {list.items.map((phone) => (
                                             <ProductsCard
                                                 key={phone.ads_id}

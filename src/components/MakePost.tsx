@@ -52,6 +52,7 @@ export default function MakePost() {
     const { data: location, isLoading: isLocationLoading } = useSWR<ILocation[]>("/api/content/location", fetcher);
     const { data: categories , isLoading: isCategoriesLoading } = useSWR<ICategories[]>("/api/content/categories", fetcher);
     const [renderNextPage, setRenderNextPage] = useState<boolean>(false);
+    const [disableWhenPublish, setDisableWhenPublish] = useState<boolean>(true);
  
    const { handleSubmit, register, control, getValues, resetField, watch, formState:{errors} } = useForm<IFormInput>({
      defaultValues:{
@@ -76,7 +77,7 @@ export default function MakePost() {
    }
 
 
-   function MainCategorySelection(mainCategory: string) {
+   function MainCategorySelection(mainCategory: string ) {
         switch (mainCategory) {
             case "Electronics":
                 return (
@@ -88,6 +89,7 @@ export default function MakePost() {
                         me_description={getValues('description')}
                         me_title={getValues('title')}
                         me_files={getValues('images')}
+                        renderNextPage={setDisableWhenPublish}
                     />
                 );
                 break;
@@ -121,7 +123,7 @@ export default function MakePost() {
         <div className="w-screen h-auto px-2">
             <div className=" w-full max-w-[600px] md:max-w-[900px] m-auto h-fit rounded-xl px-4 py-4 md:p-8 bg-white ">
                 <section className="font-medium text-lg mb-6 text-blue-600 bg-blue-100 p-2 text-center rounded-lg flex items-center justify-between">
-                    {renderNextPage ? (
+                    {renderNextPage && disableWhenPublish ? (
                         <CircleArrowLeft
                             className="cursor-pointer"
                             onClick={() => setRenderNextPage((prev) => (prev = !prev))}
