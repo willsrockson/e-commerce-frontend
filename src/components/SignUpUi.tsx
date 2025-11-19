@@ -2,8 +2,7 @@
 import { Button } from "./ui/button";
 import React, { useEffect, useState } from "react";
 import { authStore } from "@/store/authStore";
-import { userLoginUIProps } from "@/components/LoginUI";
-import { useRouter } from "next/navigation";
+import { UserLoginResponse } from "@/components/LoginUI";
 import { toastError, toastSuccess } from "./toasts/toasts";
 import { useForm, SubmitHandler } from "react-hook-form";
 import { Loader2 } from "lucide-react";
@@ -22,14 +21,13 @@ export function isValidEmail(email: string) {
 export const errorHintColor = 'text-xs text-red-500 mt-1 mb-5 pl-2';
 
 interface Register{
-        email: string;
-        password: string;
-        fullName: string;
-        phonePrimary: string;
+    email: string;
+    password: string;
+    fullName: string;
+    phonePrimary: string;
 }
 
 export default function SignUpUi() {
-    const router = useRouter();
     // Store Data
     const isLoggedInFromStore = authStore((state) => state.setAuthState);
     const setFallBackNameFromStore = authStore((state) => state.setAvatarFallback);
@@ -43,8 +41,6 @@ export default function SignUpUi() {
     
 
 
-
-    
     // Handles form submission and error checking
     const handleRegisterSubmit: SubmitHandler<Register> = async (data) => {
         try {
@@ -59,14 +55,12 @@ export default function SignUpUi() {
                 }),
                 headers: { "Content-Type": "application/json" },
             });
+             const resData = (await res.json()) as UserLoginResponse;
 
             if (!res.ok) {
-                const finalResponse: { errorMessage: string } = await res.json();
-                setUniversalErrorMessage(finalResponse.errorMessage);
+                setUniversalErrorMessage(resData.message);
                 return;
-            }
-
-            const resData = (await res.json()) as userLoginUIProps;
+            }           
             isLoggedInFromStore(resData?.isValidUser);
 
             //Takes the first character of first name and last name
@@ -79,20 +73,17 @@ export default function SignUpUi() {
             );
 
             toastSuccess({
-                message: resData?.successMessage,
+                message: resData?.message,
             });
-            
-            router.push("/");
-            router.refresh();
+
+            window.location.href = "/";
         } catch (e: unknown) {
             if (e instanceof Error) {
                 toastError({
                     message: "An unexpected error occurred. Please try again later.",
                 });
-                return;
             }
-        } finally {
-           
+            return;
         }
     };
    

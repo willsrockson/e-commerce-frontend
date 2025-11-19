@@ -1,9 +1,7 @@
 "use client";
 import { Button } from "./ui/button";
-
 import { useEffect, useState } from "react";
 import { Loader2 } from "lucide-react";
-import { useRouter } from "next/navigation";
 import { authStore } from "@/store/authStore";
 import { redFocus, errorHintColor } from "./SignUpUi";
 import { toastError } from "./toasts/toasts";
@@ -13,23 +11,31 @@ import FloatingPassword from "./sharedUi/floating-password";
 import ResetPassword from "./ResetPassword";
 import { EMAIL_GHANA_PHONE_REGEX } from "@/lib/constants";
 
-
-export interface userLoginUIProps {
+export interface UserLoginResponse {
+    success: boolean;
     isValidUser: boolean;
-    data: { storename: string; fullname: string; imageUrl: string | null; updatedAt: Date | string };
-    successMessage: string;
+    data: {
+        storename: string;
+        fullname: string;
+        imageUrl: string | null;
+        updatedAt: Date | string;
+    };
+    message: string;
 }
 
-interface Login{
+interface Login {
     emailPhone: string | number;
     password: string;
 }
 
 export default function LoginUi() {
-    const {register, handleSubmit, formState:{errors, isSubmitting}} = useForm<Login>({
-        mode: 'onBlur'
-    })
-    
+    const {
+        register,
+        handleSubmit,
+        formState: { errors, isSubmitting },
+    } = useForm<Login>({
+        mode: "onBlur",
+    });
 
     // Store Data
     const isLoggedInFromStore = authStore((state) => state.setAuthState);
@@ -37,9 +43,6 @@ export default function LoginUi() {
     const setAvatarFromStore = authStore((state) => state.setAvatarUrl);
 
     const [universalErrorMessage, setUniversalErrorMessage] = useState<string | null>(null);
-
-    const router = useRouter();
-
 
     const loginSubmitHandler: SubmitHandler<Login> = async (data) => {
         try {
@@ -53,31 +56,26 @@ export default function LoginUi() {
                 headers: { "Content-Type": "application/json" },
             });
 
+            const resData: UserLoginResponse = await res.json();
+
             if (!res.ok) {
-                const dataFrom404: { isValidUser: boolean; errorMessage: string } = await res.json();
-                setUniversalErrorMessage(dataFrom404.errorMessage);
+                setUniversalErrorMessage(resData.message);
                 return;
             }
 
-            const resData: userLoginUIProps = await res.json();
             isLoggedInFromStore(resData?.isValidUser);
 
             //Takes the first character of first name and last name
             setFallBackNameFromStore(resData.data?.fullname.split(" ")[0]);
-            setAvatarFromStore(
-                resData.data?.imageUrl + "?v=" + resData.data?.updatedAt
-            );
-            router.push("/");
-            router.refresh();
+            setAvatarFromStore(resData.data?.imageUrl + "?v=" + resData.data?.updatedAt);
+            window.location.href = "/";
         } catch (e: unknown) {
-              if(e instanceof Error){
-                toastError({message: "An unexpected error occurred. Please try again later."});
+            if (e instanceof Error) {
+                toastError({ message: "An unexpected error occurred. Please try again later." });
                 return;
-              }
+            }
         }
     };
-
-    
 
     useEffect(() => {
         isLoggedInFromStore(false);
@@ -134,12 +132,9 @@ export default function LoginUi() {
                 {universalErrorMessage && (
                     <p className="text-sm text-red-500 mt-3">{universalErrorMessage}</p>
                 )}
-                
             </form>
 
-            {!universalErrorMessage && (
-                    <ResetPassword />
-                )}
+            {!universalErrorMessage && <ResetPassword />}
         </div>
     );
 }
