@@ -69,6 +69,7 @@ export default function ProfileSettings() {
     const formData = new FormData();
     const profilePicFormData = useMemo(()=> new FormData(), []);
     const [avatar, setAvatar] = useState<File | null>(null);
+    const [isUploadingPhoto, setIsUploadingPhoto]= useState(false);
      
     //Original state
     const [original, setOriginal] = useState<UserProfileType>({
@@ -95,44 +96,41 @@ export default function ProfileSettings() {
     };
     
     
-    useEffect(()=>{
-        if(avatar == null) return;
+    useEffect(() => {
+        if (avatar == null) return;
         profilePicFormData.set("avatar", avatar);
-
+        setIsUploadingPhoto(true);
         async function updateProfilePicture() {
-
-        if(profilePicFormData.entries().next().done){
-          toastError({
-            message: "No photo selected"
-          })
-          return;
-        }
-
-        const response = await fetch("/api/account/settings/profile/picture", {
-                credentials: 'include',
-                method: "POST",
-                body: profilePicFormData
+            if (profilePicFormData.entries().next().done) {
+                toastError({
+                    message: "No photo selected",
+                });
+                return;
             }
-        );
-        const data: { publicUrl: string, successMessage: string; errorMessage: string; } = await response.json();
 
-        if (!response.ok) {
-            setAvatar(null);
-            toastError({message: data.errorMessage})
+            const response = await fetch("/api/account/settings/profile/picture", {
+                credentials: "include",
+                method: "POST",
+                body: profilePicFormData,
+            });
+            const data: { publicUrl: string; message: string; success: boolean;} = await response.json();
+
+            if (!response.ok) {
+                setAvatar(null);
+                setIsUploadingPhoto(false);
+                toastError({ message: data.message });
+                return
+            }
             
+            await mutate("/api/account/settings");
+            setAvatarUrl(data.publicUrl);
+            setAvatar(null);
+            setIsUploadingPhoto(false);
+            toastSuccess({ message: data.message });
         }
-        console.log(data);
-        
-        await mutate("/api/account/settings")
-        setAvatarUrl(data.publicUrl);
-        setAvatar(null);
-        toastSuccess({message: data.successMessage})
-        
-    }
 
-    updateProfilePicture();
-
-    }, [avatar, profilePicFormData, setAvatarUrl])
+        updateProfilePicture();
+    }, [avatar, profilePicFormData, setAvatarUrl]);
             
             
     useEffect(() => {
@@ -257,8 +255,10 @@ export default function ProfileSettings() {
                 <section className="w-full max-w-5xl h-fit">
                     <div className="w-full flex justify-center mb-4">
                         <div className="w-fit h-fit relative">
-                            <div className="relative rounded-full h-20 w-20 bg-gradient-to-r from-[#155dfc] to-violet-500 p-[1px]">
-                                <Avatar className="w-full h-full">
+                            <div
+                                className={`relative rounded-full h-20 w-20 bg-gradient-to-r from-[#155dfc] to-violet-500 p-[1px]`}
+                            >
+                                <Avatar className={`w-full h-full ${isUploadingPhoto && 'animate-pulse'}`}>
                                     <AvatarImage
                                         src={`${
                                             data &&
@@ -270,10 +270,13 @@ export default function ProfileSettings() {
                                 </Avatar>
                             </div>
 
-                            <div className="absolute translate-x-16 -translate-y-10 bg-blue-200 rounded-full p-1">
+                            <div
+                                className={`${isUploadingPhoto && 'hidden'} absolute translate-x-16 -translate-y-10 bg-blue-200 rounded-full p-1`}
+                            >
                                 <Pen size={15} />
                                 <Input
                                     type="file"
+                                    disabled={isUploadingPhoto}
                                     accept="image/*"
                                     className="absolute -translate-y-10 opacity-0 cursor-pointer"
                                     onChange={(e) => {
@@ -377,7 +380,7 @@ export default function ProfileSettings() {
                                                 className="absolute right-2 top-1/2 -translate-y-1/2 px-3 py-1 text-sm hover:bg-red-100"
                                             >
                                                 {removeLoading ? (
-                                                   <Spinner />
+                                                    <Spinner />
                                                 ) : (
                                                     <span className="text-red-500 text-xs">
                                                         Remove
@@ -388,12 +391,11 @@ export default function ProfileSettings() {
                                         <AlertDialogContent>
                                             <AlertDialogHeader>
                                                 <AlertDialogTitle>
-                                                   Remove Secondary Phone?
+                                                    Remove Secondary Phone?
                                                 </AlertDialogTitle>
                                                 <AlertDialogDescription>
-                                                    This action will remove your secondary phone 
-                                                    number and make it 
-                                                    unavailable to buyers.
+                                                    This action will remove your secondary phone
+                                                    number and make it unavailable to buyers.
                                                     Confirm to proceed.
                                                 </AlertDialogDescription>
                                             </AlertDialogHeader>
@@ -407,8 +409,8 @@ export default function ProfileSettings() {
                                                         onClick={removeHandler}
                                                         className="bg-primary-foreground text-sm hover:bg-red-100"
                                                     >
-                                                       <span className="text-red-500 text-xs">
-                                                              Confirm
+                                                        <span className="text-red-500 text-xs">
+                                                            Confirm
                                                         </span>
                                                     </Button>
                                                 </AlertDialogAction>
@@ -417,7 +419,6 @@ export default function ProfileSettings() {
                                     </AlertDialog>
                                 )}
                             </div>
-                            
                         </div>
                     </div>
 

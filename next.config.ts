@@ -21,7 +21,7 @@ const nextConfig: NextConfig = {
             //     source: '/api/:path*',
             //     destination: 'http://localhost:5001/api/:path*',
             // },
-
+      
             {
                 source: '/api/:path*',
                 destination: 'https://api.tonmame.store/api/:path*',
