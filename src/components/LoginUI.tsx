@@ -4,19 +4,19 @@ import { useEffect, useState } from "react";
 import { Loader2 } from "lucide-react";
 import { authStore } from "@/store/authStore";
 import { redFocus, errorHintColor } from "./SignUpUi";
-import { toastError } from "./toasts/toasts";
 import { useForm, SubmitHandler } from "react-hook-form";
 import { FloatingLabelInput } from "./ui/floating-label-input";
 import FloatingPassword from "./sharedUi/floating-password";
 import ResetPassword from "./ResetPassword";
 import { EMAIL_GHANA_PHONE_REGEX } from "@/lib/constants";
+import {FcGoogle} from 'react-icons/fc'
+import { Spinner } from "./ui/spinner";
+import { BackendResponseType } from "@/lib/interfaces";
 
 export interface UserLoginResponse {
     success: boolean;
-    isValidUser: boolean;
-    data: {
-        storename: string;
-        fullname: string;
+    userDetails: {
+        fullName: string;
         imageUrl: string | null;
         updatedAt: Date | string;
     };
@@ -33,16 +33,13 @@ export default function LoginUi() {
         register,
         handleSubmit,
         formState: { errors, isSubmitting },
-    } = useForm<Login>({
-        mode: "onBlur",
-    });
+    } = useForm<Login>();
 
     // Store Data
     const isLoggedInFromStore = authStore((state) => state.setAuthState);
-    const setFallBackNameFromStore = authStore((state) => state.setAvatarFallback);
-    const setAvatarFromStore = authStore((state) => state.setAvatarUrl);
-
+    
     const [universalErrorMessage, setUniversalErrorMessage] = useState<string | null>(null);
+    const [googleLoading, setGoogleLoading] = useState(false);
 
     const loginSubmitHandler: SubmitHandler<Login> = async (data) => {
         try {
@@ -56,37 +53,62 @@ export default function LoginUi() {
                 headers: { "Content-Type": "application/json" },
             });
 
-            const resData: UserLoginResponse = await res.json();
+            const resData = await res.json() as BackendResponseType;
 
             if (!res.ok) {
-                setUniversalErrorMessage(resData.message);
+                setUniversalErrorMessage(resData.error.message);
                 return;
             }
 
-            isLoggedInFromStore(resData?.isValidUser);
-
-            //Takes the first character of first name and last name
-            setFallBackNameFromStore(resData.data?.fullname.split(" ")[0]);
-            setAvatarFromStore(resData.data?.imageUrl + "?v=" + resData.data?.updatedAt);
             window.location.href = "/";
-        } catch (e: unknown) {
-            if (e instanceof Error) {
-                toastError({ message: "An unexpected error occurred. Please try again later." });
-                return;
+        } catch (error) {
+            if (error instanceof Error) {
+               if (error.name === "AbortError" || error.message.includes("Network")) {
+                  setUniversalErrorMessage("Connection timed out. Please check your internet.");
+               } else {
+                  // The Universal Fallback
+                  setUniversalErrorMessage("Something went wrong. Please try again later.");
+               }
             }
+            return;
         }
     };
+
+    const loginWithGoogle = async()=>{
+        try {
+            setGoogleLoading(true);
+        const res = await fetch('/api/user/oauth/login');
+        const responseData = await res.json() as { url: string;}
+        window.location.replace(responseData.url);
+        setGoogleLoading(false) 
+        } catch (error) {
+            if (error instanceof Error) {
+               if (error.name === "AbortError" || error.message.includes("Network")) {
+                  setUniversalErrorMessage("Connection timed out. Please check your internet.");
+               } else {
+                  // The Universal Fallback
+                  setUniversalErrorMessage("Something went wrong. Please try again later.");
+               }
+            }
+            return;
+        }    
+    }
+
 
     useEffect(() => {
         isLoggedInFromStore(false);
     }, [isLoggedInFromStore]);
 
+
     return (
-        <div className="w-full h-fit max-w-md py-8">
+        <div className="w-full h-fit max-w-md py-5">
             <form onSubmit={handleSubmit(loginSubmitHandler)}>
-                {/* <div className="flex flex-col mb-3 items-center ">
-                    <p className="font-bold">Sign in to your account</p>
-                </div> */}
+                
+                 {universalErrorMessage && (
+                    <div className="bg-red-100 w-full px-3 py-2.5 flex justify-between mb-4 rounded-md">
+                        <p className="text-sm text-red-600">{universalErrorMessage}</p>
+                    </div>
+                )}
 
                 <div className="relative">
                     <FloatingLabelInput
@@ -118,23 +140,33 @@ export default function LoginUi() {
                     />
                     <p className={errorHintColor}>{errors.password?.message}</p>
                 </div>
-
+               
                 <Button
                     disabled={isSubmitting}
                     className={`${
                         isSubmitting && `disabled:cursor-not-allowed`
-                    } bg-testing hover:bg-blue-500 w-full`}
+                    } bg-testing hover:bg-blue-500 w-full mb-3 cursor-pointer`}
                     type="submit"
                 >
                     {isSubmitting ? <Loader2 className="animate-spin h-4 w-4 mr-2" /> : "Continue"}
                 </Button>
 
-                {universalErrorMessage && (
-                    <p className="text-sm text-red-500 mt-3">{universalErrorMessage}</p>
-                )}
-            </form>
+                <Button 
+                      disabled={googleLoading} 
+                      onClick={loginWithGoogle} 
+                      type="button" variant={"outline"} 
+                      className="w-full cursor-pointer">
+                    <FcGoogle className="mr-2 h-4 w-4" />
+                    {googleLoading ? <Spinner/>: 'Continue with Google' }
+                </Button>
 
-            {!universalErrorMessage && <ResetPassword />}
+                {/* {universalErrorMessage && (
+                    <p className="text-sm text-red-500 mt-3">{universalErrorMessage}</p>
+                )} */}
+            </form>
+            <ResetPassword />
+
+            {/* {!universalErrorMessage && <ResetPassword />} */}
         </div>
     );
 }

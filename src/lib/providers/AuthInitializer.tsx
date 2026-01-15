@@ -3,8 +3,9 @@ import { authStore } from '@/store/authStore';
 import React, { useEffect } from 'react'
 
 type ResponseType = {
-    data: {full_name: string; image_url: string}[];
-    isValidUser: boolean;
+    fullName: string; 
+    imageUrl: string;
+    success: boolean;
 }
 
 export default function AuthInitializer({ children }: { children: React.ReactNode }) {
@@ -16,7 +17,7 @@ export default function AuthInitializer({ children }: { children: React.ReactNod
         
        const fetchAndSetAuth = async () => {
             try {
-                const res = await fetch('/api/user/recreate-session', {
+                const res = await fetch('/api/auth/session/recreate', {
                 method: "GET",
                 credentials: 'include'
                 });
@@ -24,9 +25,11 @@ export default function AuthInitializer({ children }: { children: React.ReactNod
                 if (!res.ok) return;
                 const data = await res.json() as ResponseType;
 
-                setAuthStateFromStore(data.isValidUser);
-                setFallBackNameFromStore(data.data[0].full_name.split(/\s+/)[0]);
-                setAvatarFromStore(data.data[0].image_url);
+                console.log(data);
+                
+                setAuthStateFromStore(data?.success);
+                setFallBackNameFromStore(data?.fullName.split(/\s+/)[0]);
+                setAvatarFromStore(data?.imageUrl);
             } catch (error) {
                 if(error instanceof Error){
                     return;

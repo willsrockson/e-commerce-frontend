@@ -12,12 +12,12 @@ import {
     LogIn,
     LogOut,
     Bookmark,
-    Home,
 } from "lucide-react";
 import {
     Sheet,
     SheetContent,
     SheetTrigger,
+    SheetTitle,
     SheetClose
 } from "@/components/ui/sheet";
 
@@ -37,30 +37,23 @@ export default function Navbar() {
     const avatarFallBack = authStore(state => state.avatarFallback);
     // Store Data
     const isLoggedInFromStore = authStore(state => state.setAuthState );
-    const setFallBackNameFromStore = authStore(state => state.setAvatarFallback);
-    const setAvatarFromStore = authStore(state => state.setAvatarUrl);
-
 
     const logout = async () => {
-        await fetch("/api/user/sign-out", {
+        const response = await fetch("/api/auth/session/terminate", {
             method: "GET",
             credentials: "include",
-            cache: "no-store"
-        })
-            .then(() => {
-                isLoggedInFromStore(false);
-                setFallBackNameFromStore("");
-                setAvatarFromStore("");
-                sessionStorage.removeItem("auth");
-                window.location.href = "/"
-            })
-            .catch(() => {
-                toastError({
-                    message: "Oops! Something happened. Please retry.",
-                });
-                window.location.href = "/"
-                return;
+            cache: "no-store",
+        });
+        if (response.ok) {
+            isLoggedInFromStore(false);
+            sessionStorage.removeItem("auth");
+        } else {
+            toastError({
+                message: "Sorry We couldn't log you out.",
             });
+        }
+
+        window.location.href = "/";
     };
 
      if (pathname === "/login") {
@@ -91,85 +84,104 @@ export default function Navbar() {
                             </Button>
                         </SheetTrigger>
                         <SheetContent side="left" className="w-[300px] sm:w-[400px]">
-                            <Link href="/" className="flex items-center gap-2 pb-4 pt-2">
+                            <SheetTitle className="sr-only">Navigation Menu</SheetTitle>
+                            <Link href="/" className="flex items-center gap-2 pb-4 pt-3 px-4">
                                 <span className="text-xl font-bold">Tonmame</span>
                                 <span className="text-sm font-light">Market Hub</span>
                             </Link>
                             <nav className="grid gap-2 py-4">
-                                <SheetClose asChild>
-                                    <Link
-                                        href="/"
-                                        className="flex items-center gap-2 px-4 py-2 text-muted-foreground hover:text-foreground"
-                                    >
-                                        <Home className="h-5 w-5" />
-                                        Home
-                                    </Link>
-                                </SheetClose>
-                                <h3 className="px-4 text-sm font-semibold">Categories</h3>
-                                {categoryList.map((category) => (
-                                    <SheetClose key={category.id} asChild>
+                               
+                                <p className="px-4 mb-2 text-xs font-bold text-gray-400 uppercase tracking-wider">
+                                     Popular Categories
+                                </p>
+                              
+
+                                <div className="flex flex-col gap-1 pl-2 max-h-40 overflow-y-auto">
+                                    {categoryList.map((category) => (
+                                        <SheetClose key={category.id} asChild>
                                         <Link
-                                            href={`/category/${category.id}`}
-                                            className="flex items-center gap-2 px-4 py-2 text-muted-foreground hover:text-foreground"
-                                        >
-                                            <span className="text-xl">{category.icon}</span>
+                                            href={`/${category.id}`}
+                                            className="flex items-center gap-3 py-2.5 px-4 text-base font-medium text-muted-foreground hover:text-blue-600 hover:bg-blue-50 rounded-md transition-colors border-l-2 border-transparent hover:border-blue-600"
+                                        >   
+                                           
+                                            <category.icon size={18}/>
                                             {category.name}
+                                          
                                         </Link>
-                                    </SheetClose>
-                                ))}
-                                {isAuthenticated ? (
-                                    <>
-                                        <SheetClose asChild>
-                                            <Link
-                                                href="/profile"
-                                                className="flex items-center gap-2 px-4 py-2 text-muted-foreground hover:text-foreground"
-                                            >
-                                                <User className="h-5 w-5" />
-                                                Profile
-                                            </Link>
                                         </SheetClose>
-                                        <SheetClose asChild>
-                                            <Link
-                                                href="/buylater"
-                                                className="flex items-center gap-2 px-4 py-2 text-muted-foreground hover:text-foreground"
-                                            >
-                                                <Bookmark className="h-5 w-5" />
-                                                Bookmarks
-                                            </Link>
-                                        </SheetClose>
-                                        <SheetClose asChild>
-                                            <Button
-                                                variant="ghost"
-                                                className="flex items-center gap-2 justify-start px-4"
-                                                onClick={logout}
-                                            >
-                                                <LogOut className="h-5 w-5" />
-                                                Logout
-                                            </Button>
-                                        </SheetClose>
-                                    </>
-                                ) : (
-                                    <>
-                                        <SheetClose asChild>
-                                            <Link
-                                                href="/login"
-                                                className="flex items-center gap-2 px-4 py-2 text-muted-foreground hover:text-foreground"
-                                            >
-                                                <LogIn className="h-5 w-5" />
-                                                Login
-                                            </Link>
-                                        </SheetClose>
-                                        <SheetClose asChild>
-                                            <Link
-                                                href="/login"
-                                                className="flex items-center gap-2 px-4 py-2 text-muted-foreground hover:text-foreground"
-                                            >
-                                                <User className="h-5 w-5" />
-                                                Register
-                                            </Link>
-                                        </SheetClose>
-                                    </>
-                                )}
+                                    ))}
+                                </div>
+
+                                <div className="my-4 border-t border-gray-100" />
+
+                                {/* ACCOUNT SECTION */}
+                                <div className="space-y-1">
+                                    <p className="px-4 mb-2 text-xs font-bold text-gray-400 uppercase tracking-wider">
+                                        Account
+                                    </p>
+
+                                    {isAuthenticated ? (
+                                        <div className="flex flex-col gap-1 pl-2">
+                                            <SheetClose asChild>
+                                                <Link
+                                                    href="/profile"
+                                                    //className="flex items-center gap-3 px-4 py-3 text-sm font-medium text-gray-600 hover:text-blue-600 hover:bg-blue-50 rounded-md transition-colors"
+                                                    className="flex items-center gap-3 py-2.5 px-4 text-base font-medium text-muted-foreground hover:text-blue-600 hover:bg-blue-50 rounded-md transition-colors border-l-2 border-transparent hover:border-blue-600"
+                                                >
+                                                    <User size={18} />
+                                                    Profile
+                                                </Link>
+                                            </SheetClose>
+                                            
+                                            <SheetClose asChild>
+                                                <Link
+                                                    href="/buy-later"
+                                                    //className="flex items-center gap-3 px-4 py-3 text-sm font-medium text-gray-600 hover:text-blue-600 hover:bg-blue-50 rounded-md transition-colors"
+                                                    className="flex items-center gap-3 py-2.5 px-4 text-base font-medium text-muted-foreground hover:text-blue-600 hover:bg-blue-50 rounded-md transition-colors border-l-2 border-transparent hover:border-blue-600"
+                                                >
+                                                    <Bookmark size={18} />
+                                                    Bookmarks
+                                                </Link>
+                                            </SheetClose>
+
+                                            <SheetClose asChild>
+                                                <button
+                                                    onClick={logout}
+                                                    //className="w-full flex items-center gap-3 px-4 py-3 text-sm font-medium text-red-500 hover:text-red-600 hover:bg-red-50 rounded-md transition-colors text-left"
+                                                    className="flex items-center gap-3 py-2.5 px-4 text-red-500 font-medium hover:text-red-600 hover:bg-blue-50 rounded-md transition-colors border-l-2 border-transparent hover:border-blue-600"
+                                                >
+                                                    <LogOut size={18} />
+                                                    Logout
+                                                </button>
+                                            </SheetClose>
+                                        </div>
+                                    ) : (
+                                        <div className="flex flex-col gap-1 pl-2">
+                                            <SheetClose asChild>
+                                                <Link
+                                                    href="/login"
+                                                    //className="flex items-center gap-3 px-4 py-3 text-sm font-medium text-gray-600 hover:text-blue-600 hover:bg-blue-50 rounded-md transition-colors"
+                                                    className="flex items-center gap-3 py-2.5 px-4 text-base font-medium text-muted-foreground hover:text-blue-600 hover:bg-blue-50 rounded-md transition-colors border-l-2 border-transparent hover:border-blue-600"
+                                                >
+                                                    <LogIn size={18} />
+                                                    Login
+                                                </Link>
+                                            </SheetClose>
+                                            
+                                            <SheetClose asChild>
+                                                <Link
+                                                    href="/register"
+                                                    //className="flex items-center gap-3 px-4 py-3 text-sm font-medium text-gray-600 hover:text-blue-600 hover:bg-blue-50 rounded-md transition-colors"
+                                                    className="flex items-center gap-3 py-2.5 px-4 text-base font-medium text-muted-foreground hover:text-blue-600 hover:bg-blue-50 rounded-md transition-colors border-l-2 border-transparent hover:border-blue-600"
+                                                >
+                                                    <User size={18} />
+                                                    Register
+                                                </Link>
+                                            </SheetClose>
+                                        </div>
+                                    )}
+                                </div>
+                                
                             </nav>
                         </SheetContent>
                     </Sheet>
@@ -210,22 +222,21 @@ export default function Navbar() {
                         <div className="hidden md:flex items-center gap-4">
                             {isAuthenticated ? (
                                 <>
-                                    <Link href="/buylater">
-                                        <Button variant="ghost" size="icon">
+                                    <Link href="/buy-later">
+                                        <Button variant="ghost" size="icon" className="cursor-pointer">
                                             <Bookmark className="h-5 w-5" />
                                             <span className="sr-only">Bookmarks</span>
                                         </Button>
                                     </Link>
 
-                                    <Link href="/postads">
-                                        <Button variant="ghost" size="icon">
-                                            <span className="text-blue-500">SELL</span>
-                                            <span className="sr-only">Sell</span>
-                                        </Button>
+                                    <Link href="/post-ads">
+                                      <Button className="bg-blue-600 cursor-pointer hover:bg-blue-700 text-white font-semibold rounded-full px-6 shadow-sm flex items-center gap-2 transition-transform active:scale-95">
+                                         <span>SELL</span>
+                                       </Button>
                                     </Link>
 
                                     <Link href="/profile">
-                                        <Button variant="ghost" size="sm">
+                                        <Button variant="ghost" size="sm" className="cursor-pointer">
                                             <User className="h-5 w-5 mr-2" />
                                             {avatarFallBack}
                                         </Button>
@@ -233,6 +244,7 @@ export default function Navbar() {
                                     <Button
                                         variant="ghost"
                                         size="sm"
+                                        className="cursor-pointer"
                                         onClick={logout}
                                     >
                                         <LogOut className="h-5 w-5 mr-2" />
@@ -241,14 +253,14 @@ export default function Navbar() {
                                 </>
                             ) : (
                                 <>
-                                    <Link href="/login">
+                                    <Link href="/login" className="cursor-pointer">
                                         <Button variant="ghost" size="sm">
-                                            <LogIn className="h-5 w-5 mr-2" />
+                                            <LogIn className="h-5 w-5 mr-2"/>
                                             Login
                                         </Button>
                                     </Link>
-                                    <Link href="/login">
-                                        <Button variant="default">Register</Button>
+                                    <Link href="/login" className="cursor-pointer" >
+                                        <Button variant="default" >Register</Button>
                                     </Link>
                                 </>
                             )}

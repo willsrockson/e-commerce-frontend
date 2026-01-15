@@ -5,15 +5,20 @@ const nextConfig: NextConfig = {
 
   images: {
         remotePatterns: [
+            // {
+            //     protocol: 'https',
+            //     hostname: 'giukqbonzinrabejotuk.supabase.co',
+            //     port: '',
+            //     pathname: '/**',
+            //     search: '',
+            // },
             {
                 protocol: 'https',
-                hostname: 'giukqbonzinrabejotuk.supabase.co',
-                port: '',
+                hostname: 'res.cloudinary.com',
                 pathname: '/**',
-                search: '',
-            },
+            }
         ],
-        qualities: [75, 85 ,90, 95],
+        qualities: [85 ,90, 95],
     },
     async rewrites() {
         return [

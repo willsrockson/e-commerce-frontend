@@ -10,6 +10,7 @@
   padding: 0;
 }
 
+
 /* Chrome, Safari, Edge, Opera removes up and down in text fields number */
 input::-webkit-outer-spin-button,
 input::-webkit-inner-spin-button {

@@ -12,7 +12,6 @@ export interface AuthState {
 }
 
 
-
 export const authStore = create<AuthState>()(persist(
     (set)=> ({
         isAuthenticated: false,

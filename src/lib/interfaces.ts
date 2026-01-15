@@ -1,87 +1,92 @@
-export interface IMobilePhonesAdsFullType {
-  ads_id: string;
+export interface MobilePhonesAdsFullType {
+  adsId: string;
   region: string;
   town: string;
   description: string;
   title: string;
-  images: string[];              // URLs of ad images
+  slug: string;
+  mainSlug: string;
+  subSlug: string;
+  images: string[]; // URLs of ad images
   color: string;
   storage: string;
   ram: string;
   exchangePossible: string;
-  price: number;                 // could be number if you store numeric prices
+  price: number; // could be number if you store numeric prices
   brand: string;
   model: string;
   negotiable: string;
   condition: string;
   screenSize: string;
   batterySize: string;
-  batteryHealth: string | null;  // nullable
+  batteryHealth: string | null; // nullable
   accessories: string[];
-  createdAt: string | Date;              // ISO timestamp (use Date if you’ll parse it)
+  createdAt: string | Date; // ISO timestamp (use Date if you’ll parse it)
   avatarImageUrl: string;
-  storename: string;
-  fullname: string;
+  storeName: string;
+  fullName: string;
   phonePrimary: string;
   phoneSecondary: string;
-  userIdVerificationStatus: string;
-  userCreatedAt: string | Date;         // ISO timestamp
+  idVerified: "unverified" | "verified" | "processing";
+  userCreatedAt: string | Date; // ISO timestamp
 }
 
-
-export interface IMobilePhonesHalfType {
-    ads_id: string;
-    firstImage: string;
-    price: number;
-    title: string;
-    town: string;
-    description: string;
-    region: string;
-    userIdVerificationStatus: string;
-    condition: string;
-    createdAt: string;
+export interface MobilePhonesHalfType {
+  adsId: string;
+  firstImage: string;
+  price: number;
+  title: string;
+  slug: string;
+  mainSlug: string;
+  subSlug: string;
+  town: string;
+  description: string;
+  region: string;
+  idVerified: "unverified" | "verified" | "processing";
+  condition: string;
+  createdAt: string;
 }
 
+export type MainCategoryType = "" | "Electronics" | "Vehicles" | "Properties";
 
-export type UpdateProfile = {
-    storename:string;
-    fullname:string;
-    phone:string;
-    phone2:string;
-    storeaddress: string;
-}
-
-
+// export type UpdateProfile = {
+//     storename:string;
+//     fullname:string;
+//     phone:string;
+//     phone2:string;
+//     storeaddress: string;
+// }
 
 // Types for getAllAdvertsPostedByMe starts here
 
 export interface IPublishedAdsByME {
-  ads_id: string;
+  adsId: string;
   firstImage: string;
-  price: string;     
+  price: string;
   description: string;
   title: string;
   region: string;
   town: string;
   deactivated: boolean;
-  main_category: string;
-  sub_category: string;
-  createdAt: string;    
+  mainCategory: string;
+  subCategory: string;
+  slug: string;
+  mainSlug: string;
+  subSlug: string;
+  createdAt: string;
   condition: string;
 }
-
 
 //export type IPublishedAdsByME = AdsResponse;
 
 // Types for getAllAdvertsPostedByMe Ends here
 
-
-
 //saved ad
 export interface ISavedAd {
-  saved_id: string;
-  ads_id: string | null;
+  savedId: string;
+  adsId: string | null;
   subCategory: string;
+  slug: string;
   title: string;
   phonePrimary: string;
   location: string;
@@ -90,17 +95,53 @@ export interface ISavedAd {
   price: number;
 }
 
-export interface NewPostType{
-    ads_id: string;
-    firstImage: string;
-    price: number;
-    title: string;
-    town: string;
-    mainCategory: string;
-    subCategory: string;
-    description: string;
-    region: string;
-    userIdVerificationStatus: string;
-    condition: string;
-    createdAt: string;
+export interface NewPostType {
+  adsId: string;
+  firstImage: string;
+  price: number;
+  title: string;
+  town: string;
+  slug: string;
+  mainSlug: string;
+  subSlug: string;
+  mainCategory: string;
+  subCategory: string;
+  description: string;
+  region: string;
+  idVerified: string;
+  condition: string;
+  createdAt: string;
+}
+
+type ErrorFormat = {
+  code: string;
+  message: string;
+};
+export interface BackendResponseType<T = string> {
+  success: boolean;
+  message: string;
+  data?: T;
+  error: ErrorFormat;
+}
+
+export type VerificationStatus = "unverified" | "verified";
+export type IdVerificationStatus = "unverified" | "processing" | "verified";
+
+export interface UserProfileData {
+  storeName: string | null;
+  fullName: string;
+  email: string;
+  storeAddress: string | null;
+
+  phonePrimary: string | null;
+  phoneSecondary: string | null;
+
+  emailVerified: VerificationStatus;
+  idVerified: IdVerificationStatus;
+  phonePrimaryVerified: VerificationStatus;
+  phoneSecondaryVerified: VerificationStatus;
+
+  avatarId: string | null;
+  imageUrl: string | null;
+  updatedAt: string | null;
 }

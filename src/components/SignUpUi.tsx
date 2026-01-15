@@ -2,13 +2,12 @@
 import { Button } from "./ui/button";
 import React, { useEffect, useState } from "react";
 import { authStore } from "@/store/authStore";
-import { UserLoginResponse } from "@/components/LoginUI";
-import { toastError, toastSuccess } from "./toasts/toasts";
 import { useForm, SubmitHandler } from "react-hook-form";
 import { Loader2 } from "lucide-react";
 import { FloatingLabelInput } from "./ui/floating-label-input";
 import FloatingPassword from "./sharedUi/floating-password";
 import { GH_PHONE_REGEX } from "@/lib/constants";
+import { BackendResponseType } from "@/lib/interfaces";
 
 export const redFocus = `border-red-400 pl-2`;
 export const blueFocus = `focus:border-blue-500 focus:ring focus:ring-blue-300`;
@@ -28,10 +27,8 @@ interface Register{
 }
 
 export default function SignUpUi() {
-    // Store Data
+    //Store state
     const isLoggedInFromStore = authStore((state) => state.setAuthState);
-    const setFallBackNameFromStore = authStore((state) => state.setAvatarFallback);
-    const setAvatarFromStore = authStore((state) => state.setAvatarUrl);
 
     const {register, handleSubmit, formState:{errors, isSubmitting}} = useForm<Register>({
         mode: 'onBlur'
@@ -39,8 +36,6 @@ export default function SignUpUi() {
 
     const [universalErrorMessage, setUniversalErrorMessage] = useState<string | null>(null);
     
-
-
     // Handles form submission and error checking
     const handleRegisterSubmit: SubmitHandler<Register> = async (data) => {
         try {
@@ -55,33 +50,23 @@ export default function SignUpUi() {
                 }),
                 headers: { "Content-Type": "application/json" },
             });
-             const resData = (await res.json()) as UserLoginResponse;
+
+            const resData = await res.json() as BackendResponseType;
 
             if (!res.ok) {
-                setUniversalErrorMessage(resData.message);
+                setUniversalErrorMessage(resData.error.message);
                 return;
             }           
-            isLoggedInFromStore(resData?.isValidUser);
-
-            //Takes the first character of first name and last name
-            const namePortion = resData.data?.fullname.split(" ")[0];
-            setFallBackNameFromStore(namePortion);
-            setAvatarFromStore(
-                !resData.data?.imageUrl
-                    ? " "
-                    : resData?.data?.imageUrl + "?v=" + resData?.data?.updatedAt
-            );
-
-            toastSuccess({
-                message: resData?.message,
-            });
-
+            
             window.location.href = "/";
-        } catch (e: unknown) {
-            if (e instanceof Error) {
-                toastError({
-                    message: "An unexpected error occurred. Please try again later.",
-                });
+        } catch (error) {
+            if (error instanceof Error) {
+               if (error.name === "AbortError" || error.message.includes("Network")) {
+                  setUniversalErrorMessage("Connection timed out. Please check your internet.");
+               } else {
+                  // The Universal Fallback
+                  setUniversalErrorMessage("Something went wrong. Please try again later.");
+               }
             }
             return;
         }
