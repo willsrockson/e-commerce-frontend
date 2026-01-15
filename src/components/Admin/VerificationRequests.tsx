@@ -4,8 +4,8 @@ import {Button} from "@/components/ui/button";
 import {Search} from "lucide-react";
 import Link from "next/link";
 import useSWR from "swr";
-import NoDataFound from "@/components/AdminDashboard/NoDataFound";
-import {UserProps} from "@/components/AdminDashboard/UnverifiedUsers";
+import NoDataFound from "@/components/Admin/NoDataFound";
+import {UserProps} from "@/components/Admin/UnverifiedUsers";
 
 export default function VerificationRequests() {
     const fetcher = (url: URL) => fetch(url).then((res) => res.json());
@@ -67,11 +67,11 @@ export default function VerificationRequests() {
                                     <Link href={`/workspace/requests/${user.user_id}`} key={user.user_id}>
                                         <div className="grid grid-cols-6 place-items-center w-full h-16 rounded-md bg-white hover:bg-[#DCBFFF]">
                                             <span>{user.email}</span>
-                                            <span>{user.firstname +" "+ user.lastname}</span>
+                                            <span>{user.firstName +" "+ user.lastName}</span>
                                             <span>{user.phone}</span>
                                             <span>{user.phone2}</span>
                                             <span>{user.created_at}</span>
-                                            <span>{user.storeaddress}</span>
+                                            <span>{user.storeAddress}</span>
                                         </div>
                                     </Link>
                                 ))}

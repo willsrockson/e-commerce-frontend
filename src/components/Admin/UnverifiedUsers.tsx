@@ -3,17 +3,17 @@ import {Input} from "@/components/ui/input";
 import {Button} from "@/components/ui/button";
 import {Search, Trash2} from "lucide-react";
 import useSWR from "swr";
-import NoDataFound from "@/components/AdminDashboard/NoDataFound";
+import NoDataFound from "@/components/Admin/NoDataFound";
 
 export interface UserProps {
     user_id: number,
     email: string,
-    firstname: string,
-    lastname: string,
+    firstName: string,
+    lastName: string,
     phone: string,
     phone2: string,
     created_at: string,
-    storeaddress: string,
+    storeAddress: string,
 }
 
 
@@ -82,11 +82,11 @@ export default function UnverifiedUsers() {
                                 <div className="grid grid-cols-8 place-items-center w-full h-16 rounded-md bg-white" key={user.user_id}>
                                     <span>{user.user_id}</span>
                                     <span>{user.email}</span>
-                                    <span>{user.firstname +" "+ user.lastname}</span>
+                                    <span>{user.firstName +" "+ user.lastName}</span>
                                     <span>{user.phone}</span>
                                     <span>{user.phone2}</span>
                                     <span>{user.created_at}</span>
-                                    <span>{user.storeaddress}</span>
+                                    <span>{user.storeAddress}</span>
                                     <span><Trash2/></span>
 
                                 </div>
