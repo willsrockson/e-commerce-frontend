@@ -1,15 +1,15 @@
 "use client";
 import Link from "next/link";
-import React, { useEffect, useMemo, useRef, useState } from "react";
+import React, { useEffect, useRef } from "react";
 import NewPosts from "@/components/homepage-trending-new-post/NewPosts";
 import Footer from "@/components/Footer";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { ArrowUpRight } from "lucide-react";
+//import { ArrowUpRight } from "lucide-react";
 import CategoryPage from "@/components/CategoryPage";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { debounce } from "lodash";
-import { useRouter, useSearchParams } from "next/navigation";
+//import { debounce } from "lodash";
+import { useSearchParams } from "next/navigation";
 import { siteMaxWidth, tabsCustomColor } from "@/lib/constants";
 const { handleEmailVerification } =
   await import("@/lib/helpers/email-verification"); // Lazy loading this helper function
@@ -17,26 +17,26 @@ const { handleEmailVerification } =
 export default function HomePage() {
   const search = useSearchParams();
 
-  const router = useRouter();
+  //const router = useRouter();
 
-  const [finalSearchResults, setFinalSearchResults] = useState([]);
+  //const [finalSearchResults, setFinalSearchResults] = useState([]);
   const searchRef = useRef<HTMLInputElement>(null);
-  const [searchData, setSearchData] = useState("");
+  //const [searchData, setSearchData] = useState("");
 
-  const searchFieldDebounce = useMemo(
-    () =>
-      debounce((newData) => {
-        setSearchData(() => newData);
-      }, 600),
-    [],
-  );
+  // const searchFieldDebounce = useMemo(
+  //   () =>
+  //     debounce((newData) => {
+  //       setSearchData(() => newData);
+  //     }, 600),
+  //   [],
+  // );
 
-  const query = new URLSearchParams({});
+  //const query = new URLSearchParams({});
 
-  const triggerSearchResults = (category: string) => {
-    query.set("search", searchData);
-    router.push(category + `?${query}`);
-  };
+  // const triggerSearchResults = (category: string) => {
+  //   query.set("search", searchData);
+  //   router.push(category + `?${query}`);
+  // };
 
   const token = search.get("verify-email");
 
@@ -46,42 +46,42 @@ export default function HomePage() {
   }, [token]);
 
   //Search item Effect
-  useEffect(() => {
-    if (!searchData) return;
+  // useEffect(() => {
+  //   if (!searchData) return;
 
-    const controller = new AbortController();
+  //   const controller = new AbortController();
 
-    console.log("Search Input: ", searchData);
+  //   console.log("Search Input: ", searchData);
 
-    const searchResults = async () => {
-      try {
-        const response = await fetch("/api/search/find-product", {
-          method: "POST",
-          credentials: "include",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ search: searchData }),
-          signal: controller.signal,
-        });
+  //   const searchResults = async () => {
+  //     try {
+  //       const response = await fetch("/api/search/find-product", {
+  //         method: "POST",
+  //         credentials: "include",
+  //         headers: { "Content-Type": "application/json" },
+  //         body: JSON.stringify({ search: searchData }),
+  //         signal: controller.signal,
+  //       });
 
-        if (!response.ok) throw new Error("Network response was not ok");
+  //       if (!response.ok) throw new Error("Network response was not ok");
 
-        const result = await response.json();
+  //       const result = await response.json();
 
-        console.log(result);
-        setFinalSearchResults(result);
-      } catch (error: unknown) {
-        if (error) {
-          setFinalSearchResults([]);
-        }
-        setFinalSearchResults([]);
-      }
-    };
+  //       console.log(result);
+  //       setFinalSearchResults(result);
+  //     } catch (error: unknown) {
+  //       if (error) {
+  //         setFinalSearchResults([]);
+  //       }
+  //       setFinalSearchResults([]);
+  //     }
+  //   };
 
-    searchResults();
-    return () => {
-      controller.abort(); // abort fetch on cleanup
-    };
-  }, [searchData]);
+  //   searchResults();
+  //   return () => {
+  //     controller.abort(); // abort fetch on cleanup
+  //   };
+  // }, [searchData]);
 
   return (
     <div className="w-full min-h-[calc(100vh-4rem)]">
@@ -108,11 +108,11 @@ export default function HomePage() {
                       className="w-full py-6 pl-5 pr-12 text-gray-900 bg-white"
                       ref={searchRef}
                       type="text"
-                      onChange={() =>
-                        searchFieldDebounce(
-                          searchRef.current ? searchRef.current.value : "",
-                        )
-                      }
+                      // onChange={ 
+                      //   // searchFieldDebounce(
+                      //   //   searchRef.current ? searchRef.current.value : "",
+                      //   // )
+                      // }
                     />
                     {/* <Button className="rounded-l-none px-3 md:px-6 py-6 ">
                                             <Search className="h-5 w-5 sm:hidden md:mr-2" />
@@ -121,6 +121,7 @@ export default function HomePage() {
                   </div>
 
                   {/* Search result */}
+                  {/*  
                   {finalSearchResults.length > 0 && searchData && (
                     <div
                       className={`w-full flex justify-start space-x-2 max-h-80 overflow-y-scroll space-y-2 border-gray-400 bg-white shadow-md text-black absolute rounded-lg mt-1`}
@@ -146,7 +147,7 @@ export default function HomePage() {
                         ))}
                       </ul>
                     </div>
-                  )}
+                  )} */}
                 </div>
               </div>
             </div>
