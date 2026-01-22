@@ -22,7 +22,7 @@ export default function Footer() {
                         <h3 className="text-sm font-medium">Categories</h3>
                         <ul className="mt-4 space-y-2 text-sm">
                             <li>
-                                <Link href="/mobilephones" className="text-muted-foreground hover:text-foreground">
+                                <Link href="/mobile-phones" className="text-muted-foreground hover:text-foreground">
                                     Mobile Phones
                                 </Link>
                             </li>
@@ -66,7 +66,7 @@ export default function Footer() {
                                 </Link>
                             </li>
                             <li>
-                                <Link href="/buylater" className="text-muted-foreground hover:text-foreground">
+                                <Link href="/buy-later" className="text-muted-foreground hover:text-foreground">
                                     Bookmarks
                                 </Link>
                             </li>

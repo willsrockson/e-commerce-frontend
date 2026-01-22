@@ -467,7 +467,7 @@ const MobilePhonesSub = ({
                 {/* RAM */}
                 <div className="space-y-1.5">
                   <Label htmlFor="ram" className="text-gray-600">
-                    RAM
+                    Ram
                   </Label>
                   {modelValue && brandValue ? (
                     <SelectOnly

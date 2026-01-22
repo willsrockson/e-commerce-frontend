@@ -167,7 +167,7 @@ export default function ImageUploaderFull({
                      <Label className="block">Add photos</Label>
                      {warningUi}
                      
-                     <section className="flex justify-start overflow-x-scroll">
+                     <section className="flex justify-start overflow-x-auto">
                         {/* Upload Button */}
                         <div className="relative mr-2 grid place-items-center rounded-md bg-blue-100 min-w-20 h-20">
                            <p
@@ -245,7 +245,7 @@ export default function ImageUploaderFull({
                            sensors={sensors}
                         >
                            {images.length > 0 && (
-                              <div className="flex flex-shrink-0 gap-2 overflow-x-scroll">
+                              <div className="flex flex-shrink-0 gap-2 overflow-x-auto">
                                  <SortableContext
                                     //Items must be the IDs (URL string or Filename)
                                     items={images.map((img) => img.id)}

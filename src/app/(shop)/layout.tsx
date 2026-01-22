@@ -5,6 +5,7 @@ import { ToastContainer } from 'react-toastify';
 import { Toaster } from "@/components/ui/sonner"
 import Navbar from "@/components/Navbar";
 import AuthInitializer from "@/lib/providers/AuthInitializer";
+import FloatingSellButton from "@/components/sharedUi/FloatingSellButton";
 
 
 
@@ -28,6 +29,7 @@ export default function RootLayout({
           <AuthInitializer>{children}</AuthInitializer>
         <Toaster closeButton position="bottom-center"/>  
         <ToastContainer position="bottom-right"/>
+        <FloatingSellButton />
       </body>
 
     </html>

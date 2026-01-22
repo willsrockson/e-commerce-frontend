@@ -13,7 +13,9 @@ import { labelTextColor } from "../RoutingComponents/Electronics/MobilePhones";
 import { useAsyncList } from "react-stately";
 import { useInView } from "react-intersection-observer";
 import { siteMaxWidth } from "@/lib/constants";
-import { ArrowLeft, Filter } from "lucide-react"; // Added Icons
+import { ArrowLeft, Filter } from "lucide-react";
+import { PiMegaphoneFill } from "react-icons/pi";
+
 
 const month = [
   "January",
@@ -36,11 +38,11 @@ type ICountType = {
   sub: { label: string; count: number }[];
 };
 
-interface CountData {
+export interface CountData {
   countAds: ICountType;
 }
 
-interface IAllMyAdResponse {
+export interface IAllMyAdResponse {
   publishedAds: [];
   hasMore: boolean;
   total: number;
@@ -130,7 +132,6 @@ export default function MyAdsUi() {
     window.history.replaceState(null, "", `?${query.toString()}`);
   }, [watchMainValue, watchSubValue]);
 
-  // --- THE NEW UI RENDER ---
   return (
     <div className="w-full min-h-screen bg-gray-50/50 pb-20">
       <div className={`${siteMaxWidth} mx-auto px-4 py-6`}>
@@ -160,7 +161,7 @@ export default function MyAdsUi() {
           </div>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div className="space-y-1.5">
-              <Label className={labelTextColor}>Main Category</Label>
+              <Label className={labelTextColor}>Category</Label>
               <SelectSearchWithAdsCount
                 name="main_category"
                 labelText="category"
@@ -179,7 +180,7 @@ export default function MyAdsUi() {
                   labelText="sub category"
                   setValue={setValue}
                   control={control}
-                  placeholder="All Models"
+                  placeholder="All Sub Categories"
                   countedItems={myCount.countAds.sub}
                   className="w-full"
                 />
@@ -205,7 +206,7 @@ export default function MyAdsUi() {
               {list?.items.length === 0 && !metadata.hasMore ? (
                 <div className="flex flex-col items-center justify-center py-20 text-center bg-white rounded-xl border border-dashed border-gray-300">
                   <div className="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mb-4 text-2xl">
-                    📢
+                    <PiMegaphoneFill />
                   </div>
                   <h3 className="text-lg font-medium text-gray-900">
                     You haven&apos;t posted any ads yet
@@ -237,7 +238,6 @@ export default function MyAdsUi() {
             </>
           )}
 
-          {/* Load More Trigger */}
           <div
             className={`mt-8 flex justify-center ${!metadata.hasMore ? "hidden" : "block"}`}
             ref={ref}

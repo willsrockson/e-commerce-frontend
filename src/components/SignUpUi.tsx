@@ -3,7 +3,7 @@ import { Button } from "./ui/button";
 import React, { useEffect, useState } from "react";
 import { authStore } from "@/store/authStore";
 import { useForm, SubmitHandler } from "react-hook-form";
-import { Loader2 } from "lucide-react";
+import { AlertCircle, Loader2 } from "lucide-react";
 import { FloatingLabelInput } from "./ui/floating-label-input";
 import FloatingPassword from "./sharedUi/floating-password";
 import { GH_PHONE_REGEX } from "@/lib/constants";
@@ -78,97 +78,100 @@ export default function SignUpUi() {
     }, [isLoggedInFromStore]);
 
     return (
-        // w-full border px-8 py-4  h-fit rounded-lg max-w-md pb-8
-        <div className="w-full h-fit max-w-md py-8">
-            <form onSubmit={handleSubmit(handleRegisterSubmit)}>
-                {/* <div className="flex flex-col mb-3 items-center ">
+       // w-full border px-8 py-4  h-fit rounded-lg max-w-md pb-8
+       <div className="w-full h-fit max-w-md py-8">
+          <form onSubmit={handleSubmit(handleRegisterSubmit)}>
+             {/* <div className="flex flex-col mb-3 items-center ">
                     <p className="font-bold">
                        Create an account
                     </p>
                 </div> */}
 
-                <div className="flex flex-col ">
-                    <FloatingLabelInput
-                        id="fullName"
-                        type="text"
-                        className={`w-full ${errors.fullName && redFocus}`}
-                        label="Full name"
-                        {...register("fullName", { required: "Please enter your full name" })}
-                        onFocus={() => setUniversalErrorMessage(null)}
-                    />
-                    <p className={errorHintColor}>{errors.fullName?.message}</p>
+             <div className="flex flex-col ">
+                <FloatingLabelInput
+                   id="fullName"
+                   type="text"
+                   className={`w-full ${errors.fullName && redFocus}`}
+                   label="Full name"
+                   {...register("fullName", { required: "Please enter your full name" })}
+                   onFocus={() => setUniversalErrorMessage(null)}
+                />
+                <p className={errorHintColor}>{errors.fullName?.message}</p>
 
-                    <FloatingLabelInput
-                        id="email"
-                        type="email"
-                        className={`w-full ${errors.email && redFocus}`}
-                        label="Email"
-                        {...register("email", {
-                            required: "Please enter your email address.",
-                            pattern: {
-                                value: /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/,
-                                message: "Please enter a valid email address."
-                            },
-                        })}
-                        onFocus={() => setUniversalErrorMessage(null)}
-                    />
-                    <p className={errorHintColor}>{errors.email?.message}</p>
+                <FloatingLabelInput
+                   id="email"
+                   type="email"
+                   className={`w-full ${errors.email && redFocus}`}
+                   label="Email"
+                   {...register("email", {
+                      required: "Please enter your email address.",
+                      pattern: {
+                         value: /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/,
+                         message: "Please enter a valid email address.",
+                      },
+                   })}
+                   onFocus={() => setUniversalErrorMessage(null)}
+                />
+                <p className={errorHintColor}>{errors.email?.message}</p>
 
-                    <FloatingPassword<Register>
-                        className={`w-full ${errors.password && redFocus}`}
-                        label="Password"
-                        name="password"
-                        register={register}
-                        minLength={6}
-                        minLenErrorMessage="Password must be 6 characters or more."
-                        onFocus={() => setUniversalErrorMessage(null)}
-                    />
-                    <p className={errorHintColor}>{errors.password?.message}</p>
+                <FloatingPassword<Register>
+                   className={`w-full ${errors.password && redFocus}`}
+                   label="Password"
+                   name="password"
+                   register={register}
+                   minLength={6}
+                   minLenErrorMessage="Password must be 6 characters or more."
+                   onFocus={() => setUniversalErrorMessage(null)}
+                />
+                <p className={errorHintColor}>{errors.password?.message}</p>
 
-                    <FloatingLabelInput
-                        id="phoneNumber"
-                        type="number"
-                        className={`w-full ${errors.phonePrimary && redFocus}`}
-                        label="Phone (digits only)"
-                        {...register("phonePrimary", {
-                            required: "Please enter a valid phone number",
-                            minLength: {
-                                value: 10,
-                                message: "Phone number cannot be less than 10 digits.",
-                            },
-                            maxLength: {
-                                value: 10,
-                                message: "Phone number cannot be more than 10 digits.",
-                            },
-                            pattern:{
-                                value: GH_PHONE_REGEX,
-                                message: "Invalid phone number."
-                            }
-                        })}
-                        onFocus={() => setUniversalErrorMessage(null)}
-                    />
-                    <p className={errorHintColor}>{errors.phonePrimary?.message}</p>
-                    <Button
-                        disabled={isSubmitting}
-                        type="submit"
-                        className={`${
-                            isSubmitting
-                                ? `bg-gray-500 text-white disabled:cursor-not-allowed`
-                                : `bg-testing hover:bg-blue-400`
-                        } w-full`}
-                    >
-                        {isSubmitting ? (
-                            <Loader2 className="animate-spin h-4 w-4 mr-2" />
-                        ) : (
-                            "Sign up for free"
-                        )}
-                    </Button>
+                <FloatingLabelInput
+                   id="phoneNumber"
+                   type="number"
+                   className={`w-full ${errors.phonePrimary && redFocus}`}
+                   label="Phone (digits only)"
+                   {...register("phonePrimary", {
+                      required: "Please enter a valid phone number",
+                      minLength: {
+                         value: 10,
+                         message: "Phone number cannot be less than 10 digits.",
+                      },
+                      maxLength: {
+                         value: 10,
+                         message: "Phone number cannot be more than 10 digits.",
+                      },
+                      pattern: {
+                         value: GH_PHONE_REGEX,
+                         message: "Invalid phone number.",
+                      },
+                   })}
+                   onFocus={() => setUniversalErrorMessage(null)}
+                />
+                <p className={errorHintColor}>{errors.phonePrimary?.message}</p>
+                <Button
+                   disabled={isSubmitting}
+                   type="submit"
+                   className={`${
+                      isSubmitting
+                         ? `bg-gray-500 text-white disabled:cursor-not-allowed`
+                         : `bg-testing hover:bg-blue-400`
+                   } w-full`}
+                >
+                   {isSubmitting ? (
+                      <Loader2 className="animate-spin h-4 w-4 mr-2" />
+                   ) : (
+                      "Sign up for free"
+                   )}
+                </Button>
 
-                    {universalErrorMessage && (
-                        <p className="text-sm text-red-500 mt-3">{universalErrorMessage}</p>
-                    )}
-                </div>
-            </form>
-        </div>
+                {universalErrorMessage && (
+                   <div className="flex items-center gap-2 p-3 mt-4 text-sm text-red-600 bg-red-50 border border-red-200 rounded-md">
+                      <AlertCircle size={16} />
+                      <span>{universalErrorMessage}</span>
+                   </div>
+                )}
+             </div>
+          </form>
+       </div>
     );
 }

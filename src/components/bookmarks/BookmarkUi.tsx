@@ -6,7 +6,7 @@ import BeatLoaderUI from "../loaders/BeatLoader";
 import useSWR from "swr";
 import { toastError, toastSuccess } from "../toasts/toasts";
 import { useState } from "react";
-import { Loader2, Trash2, ArrowLeft } from "lucide-react"; // Added Icons
+import { Loader2, Trash2, ArrowLeft, ShoppingCart } from "lucide-react"; // Added Icons
 import { siteMaxWidth } from "@/lib/constants";
 import { Button } from "@/components/ui/button"; // Assuming you have shadcn button
 
@@ -91,9 +91,8 @@ export default function BookmarkUi() {
             <>
               {data?.length === 0 ? (
                 <div className="flex flex-col items-center justify-center py-20 text-center">
-                  <div className="w-48 h-48 bg-gray-200 rounded-full mb-4 flex items-center justify-center opacity-50">
-                    {/* You can put an icon or your empty state image here */}
-                    <span className="text-4xl">🛒</span>
+                  <div className="w-32 h-32 bg-gray-200 rounded-full mb-4 flex items-center justify-center opacity-50">
+                    <span className="text-4xl"><ShoppingCart/></span>
                   </div>
                   <h3 className="text-lg font-medium text-gray-900">
                     Your wishlist is empty

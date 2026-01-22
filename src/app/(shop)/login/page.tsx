@@ -11,7 +11,7 @@ export default function LoginPage() {
 
                 <div className="relative hidden lg:block w-full min-h-[80vh] rounded-lg overflow-hidden">
                       <Image 
-                        src={'/images/login2.webp'}
+                        src={'/images/login.avif'}
                         alt="login"
                         fill
                         priority

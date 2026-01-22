@@ -255,10 +255,10 @@ export default function PhoneNumberVerification({
 
    return (
       <div className="w-full">
-         <div className="relative mb-5">
+         <div className="relative">
             <FloatingLabelInput
                label={label}
-               className={`${blueFocus} mt-1 mb-5`}
+               className={`${blueFocus} mt-1`}
                type={"number"}
                name={nameAndId}
                id={nameAndId}

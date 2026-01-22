@@ -104,7 +104,7 @@ export default function ProductsCard({
       {/* 1. IMAGE SECTION */}
       <Link
         href={id}
-        className="block relative aspect-[4/3] bg-gray-100 overflow-hidden"
+        className="block relative aspect-[4/5] bg-gray-100 overflow-hidden"
       >
         <Image
           src={firstImageUrl}

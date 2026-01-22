@@ -25,6 +25,8 @@ export interface MobilePhonesAdsFullType {
   avatarImageUrl: string;
   storeName: string;
   fullName: string;
+  storeNameSlug: string;
+  openHours: string;
   phonePrimary: string;
   phoneSecondary: string;
   idVerified: "unverified" | "verified" | "processing";
@@ -132,15 +134,15 @@ export interface UserProfileData {
   fullName: string;
   email: string;
   storeAddress: string | null;
-
+  storeDescription: string | null;
+  openHours: string;
   phonePrimary: string | null;
   phoneSecondary: string | null;
-
   emailVerified: VerificationStatus;
   idVerified: IdVerificationStatus;
   phonePrimaryVerified: VerificationStatus;
   phoneSecondaryVerified: VerificationStatus;
-
+  userCreatedAt: string | Date;
   avatarId: string | null;
   imageUrl: string | null;
   updatedAt: string | null;

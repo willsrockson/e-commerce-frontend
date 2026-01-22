@@ -1,7 +1,7 @@
 "use client";
 import { Button } from "./ui/button";
 import { useEffect, useState } from "react";
-import { Loader2 } from "lucide-react";
+import { AlertCircle, Loader2 } from "lucide-react";
 import { authStore } from "@/store/authStore";
 import { redFocus, errorHintColor } from "./SignUpUi";
 import { useForm, SubmitHandler } from "react-hook-form";
@@ -101,72 +101,78 @@ export default function LoginUi() {
 
 
     return (
-        <div className="w-full h-fit max-w-md py-5">
-            <form onSubmit={handleSubmit(loginSubmitHandler)}>
-                
-                 {universalErrorMessage && (
-                    <div className="bg-red-100 w-full px-3 py-2.5 flex justify-between mb-4 rounded-md">
-                        <p className="text-sm text-red-600">{universalErrorMessage}</p>
-                    </div>
-                )}
-
-                <div className="relative">
-                    <FloatingLabelInput
-                        id="EmailOrPhone"
-                        className={`w-full ${errors.emailPhone && redFocus}`}
-                        label="Email or Phone"
-                        type="text"
-                        {...register("emailPhone", {
-                            required: "Please enter your email or number",
-                            pattern: {
-                                value: EMAIL_GHANA_PHONE_REGEX,
-                                message: "Please enter a valid email address or phone.",
-                            },
-                        })}
-                        onFocus={() => setUniversalErrorMessage(null)}
-                    />
-                    <p className={errorHintColor}>{errors.emailPhone?.message}</p>
+       <div className="w-full h-fit max-w-md py-0">
+          <form onSubmit={handleSubmit(loginSubmitHandler)}>
+             {universalErrorMessage ? (
+                <div className="flex items-center gap-2 p-3 mb-4 text-sm text-red-600 bg-red-50 border border-red-200 rounded-md">
+                   <AlertCircle size={16} />
+                   <span>{universalErrorMessage}</span>
                 </div>
-
-                <div>
-                    <FloatingPassword<Login>
-                        className={`w-full ${errors.password && redFocus}`}
-                        label="Password"
-                        name="password"
-                        register={register}
-                        minLength={6}
-                        minLenErrorMessage="At least 6 characters needed"
-                        onFocus={() => setUniversalErrorMessage(null)}
-                    />
-                    <p className={errorHintColor}>{errors.password?.message}</p>
+             ) : (
+                <div className="bg-red-100 w-full px-3 py-1 flex justify-between mb-4 rounded-md opacity-0">
+                   <span className="text-sm text-red-600">nothing</span>
                 </div>
-               
-                <Button
-                    disabled={isSubmitting}
-                    className={`${
-                        isSubmitting && `disabled:cursor-not-allowed`
-                    } bg-testing hover:bg-blue-500 w-full mb-3 cursor-pointer`}
-                    type="submit"
-                >
-                    {isSubmitting ? <Loader2 className="animate-spin h-4 w-4 mr-2" /> : "Continue"}
-                </Button>
+             )}
 
-                <Button 
-                      disabled={googleLoading} 
-                      onClick={loginWithGoogle} 
-                      type="button" variant={"outline"} 
-                      className="w-full cursor-pointer">
-                    <FcGoogle className="mr-2 h-4 w-4" />
-                    {googleLoading ? <Spinner/>: 'Continue with Google' }
-                </Button>
+             <div className="relative">
+                <FloatingLabelInput
+                   id="EmailOrPhone"
+                   className={`w-full ${errors.emailPhone && redFocus}`}
+                   label="Email or Phone"
+                   type="text"
+                   {...register("emailPhone", {
+                      required: "Please enter your email or number",
+                      pattern: {
+                         value: EMAIL_GHANA_PHONE_REGEX,
+                         message: "Please enter a valid email address or phone.",
+                      },
+                   })}
+                   onFocus={() => setUniversalErrorMessage(null)}
+                />
+                <p className={errorHintColor}>{errors.emailPhone?.message}</p>
+             </div>
 
-                {/* {universalErrorMessage && (
+             <div>
+                <FloatingPassword<Login>
+                   className={`w-full ${errors.password && redFocus}`}
+                   label="Password"
+                   name="password"
+                   register={register}
+                   minLength={6}
+                   minLenErrorMessage="At least 6 characters needed"
+                   onFocus={() => setUniversalErrorMessage(null)}
+                />
+                <p className={errorHintColor}>{errors.password?.message}</p>
+             </div>
+
+             <Button
+                disabled={isSubmitting}
+                className={`${
+                   isSubmitting && `disabled:cursor-not-allowed`
+                } bg-testing hover:bg-blue-500 w-full mb-3 cursor-pointer`}
+                type="submit"
+             >
+                {isSubmitting ? <Loader2 className="animate-spin h-4 w-4 mr-2" /> : "Continue"}
+             </Button>
+
+             <Button
+                disabled={googleLoading}
+                onClick={loginWithGoogle}
+                type="button"
+                variant={"outline"}
+                className="w-full cursor-pointer"
+             >
+                {googleLoading ? <Spinner /> : <FcGoogle className="mr-1 h-4 w-4" />} Continue with
+                Google
+             </Button>
+
+             {/* {universalErrorMessage && (
                     <p className="text-sm text-red-500 mt-3">{universalErrorMessage}</p>
                 )} */}
-            </form>
-            <ResetPassword />
+          </form>
+          <ResetPassword />
 
-            {/* {!universalErrorMessage && <ResetPassword />} */}
-        </div>
+          {/* {!universalErrorMessage && <ResetPassword />} */}
+       </div>
     );
 }

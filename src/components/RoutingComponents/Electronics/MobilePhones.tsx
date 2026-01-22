@@ -58,9 +58,11 @@ export interface IFormDataTypes {
   exchangePossible: string;
   negotiable: string;
   idVerified: string;
+  q:string;
 }
 
-export const labelTextColor = "text-gray-600";
+//export const labelTextColor = "text-gray-600";
+export const labelTextColor = "text-xs font-bold text-gray-500 uppercase tracking-wider";
 
 const popularBrands = [
   { imgUrl: "/images/popular-brands/mobilephones/apple.webp", brand: "Apple" },
@@ -108,6 +110,7 @@ export default function MobilePhones() {
         exchangePossible: searchParams.get("exchange_possible") ?? "",
         negotiable: searchParams.get("negotiable") ?? "",
         idVerified: searchParams.get("id_verified") ?? "",
+        q: searchParams.get("q") ?? "",
       },
     });
 
@@ -124,6 +127,7 @@ export default function MobilePhones() {
     watchExchangePossibleValue,
     watchNegotiableValue,
     watchIdVerification,
+    q
   ] = watch([
     "brand",
     "model",
@@ -137,6 +141,7 @@ export default function MobilePhones() {
     "exchangePossible",
     "negotiable",
     "idVerified",
+    "q"
   ]);
 
   const [trigger, setTrigger] = useState(0);
@@ -232,6 +237,7 @@ export default function MobilePhones() {
       query.set("exchange_possible", watchExchangePossibleValue);
     if (watchNegotiableValue) query.set("negotiable", watchNegotiableValue);
     if (watchIdVerification) query.set("id_verified", watchIdVerification);
+     if (q) query.set("q", q);
 
     listRef.current.setFilterText(query.toString());
     window.history.replaceState(null, "", `?${query.toString()}`);
@@ -251,6 +257,7 @@ export default function MobilePhones() {
     watchExchangePossibleValue,
     watchNegotiableValue,
     watchIdVerification,
+    q
   ]);
 
   return (
@@ -266,11 +273,7 @@ export default function MobilePhones() {
           </Badge>
         </div>
 
-        {/* LAYOUT GRID:
-           lg:grid-cols-[280px_1fr] -> Creates the sidebar (280px) and content area on Desktop
-           flex-col -> Stacks them on Mobile
-           overflow-x-hidden -> Prevents body scroll issues
-        */}
+        
         <div
           className={`w-full ${siteMaxWidth} m-auto grid lg:grid-cols-[280px_1fr] gap-8 px-4 pb-44`}
         >
@@ -281,14 +284,6 @@ export default function MobilePhones() {
                 <Filter size={18} /> Filters
               </div>
 
-              {/* THE MAGIC SCROLL CONTAINER:
-                flex-row: Horizontal on Mobile
-                overflow-x-auto: Scrollable X on Mobile
-                snap-x: Snappy feel on Mobile
-                -mx-4 px-4: Allows scroll to touch screen edges while keeping content padded
-                lg:flex-col: Stacks vertically on Desktop
-                lg:overflow-visible: Removes scroll on Desktop (uses sticky)
-            */}
               <div className="flex flex-row gap-4 overflow-x-auto snap-x scrollbar-none pb-4 -mx-4 px-4 lg:mx-0 lg:px-0 lg:pb-0 lg:flex-col lg:overflow-visible">
                 {/* Card 1: Region & Town (2 Inputs) */}
                 <div className="bg-white border border-gray-100 shadow-sm px-4 py-4 flex flex-col lg:flex-col gap-4 rounded-xl min-w-70 lg:w-full">
@@ -542,7 +537,7 @@ export default function MobilePhones() {
                 {/* Card 7: Seller Status (1 Input - Last One) */}
                 <div className="bg-white border border-gray-100 shadow-sm px-4 py-4 flex flex-col lg:flex-col gap-4 rounded-xl min-w-70 lg:w-full">
                   <section className="grid w-full items-center gap-1.5">
-                    <Label htmlFor="verified_seller">Seller status</Label>
+                    <Label className={labelTextColor} htmlFor="verified_seller">Seller status</Label>
                     <SelectSearchWithAdsCount
                       name="idVerified"
                       labelText="verified seller"

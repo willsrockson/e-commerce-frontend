@@ -2,7 +2,6 @@ import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
   /* config options here */
-
   images: {
         remotePatterns: [
             // {
@@ -15,6 +14,11 @@ const nextConfig: NextConfig = {
             {
                 protocol: 'https',
                 hostname: 'res.cloudinary.com',
+                pathname: '/**',
+            },
+            {
+                protocol: 'https',
+                hostname: 'fdn2.gsmarena.com',
                 pathname: '/**',
             }
         ],
@@ -34,6 +38,12 @@ const nextConfig: NextConfig = {
 
         ]
     },
+    // Remove console.log in prod and keep .error
+    compiler : {
+        removeConsole :{
+            exclude: ['error']
+        }
+    }
 };
 
 export default nextConfig;

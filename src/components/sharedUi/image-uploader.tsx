@@ -124,7 +124,7 @@ export default function ImageUploader({
                      <Label className="block">Add photos</Label>
                      {warningUi}
 
-                     <section className="flex justify-start overflow-x-scroll">
+                     <section className="flex justify-start overflow-x-auto">
                         <div className="relative mr-2 grid place-items-center rounded-md bg-blue-100 min-w-20 h-20">
                            <p
                               onClick={() => fileRef.current?.click()}
@@ -204,7 +204,7 @@ export default function ImageUploader({
                            sensors={sensors}
                         >
                            {images.length > 0 && (
-                              <div className="flex flex-shrink-0 gap-2 overflow-x-scroll">
+                              <div className="flex flex-shrink-0 gap-2 overflow-x-auto">
                                  <SortableContext
                                     items={images.map((img) => img.file.name)}
                                     strategy={horizontalListSortingStrategy}

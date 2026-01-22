@@ -3,25 +3,20 @@ import { useParams, useRouter } from "next/navigation";
 import { Badge } from "@/components/ui/badge";
 import Image from "next/image";
 
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-
 import { BackendResponseType, MobilePhonesAdsFullType } from "@/lib/interfaces";
 
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 
 import { Button } from "@/components/ui/button";
 import {
-  PhoneCall,
   MapPin,
   MessageSquareMore,
   MoveLeft,
-  Copy,
   Bookmark,
+  Calendar,
+  Share2,
+  ThumbsUp,
+  ShieldCheck,
 } from "lucide-react";
 import useSWR from "swr";
 import BeatLoaderUI from "@/components/loaders/BeatLoader";
@@ -41,6 +36,8 @@ import { useAsyncList } from "react-stately";
 import { useInView } from "react-intersection-observer";
 import { siteMaxWidth } from "@/lib/constants";
 import { Spinner } from "@/components/ui/spinner";
+import Link from "next/link";
+import CopyPhoneNumber from "@/components/CopyPhoneNumber";
 
 const month = [
   "January",
@@ -199,10 +196,6 @@ export default function Phone() {
     }
   };
 
-  const copyTextAlert = async () => {
-    toastSuccess({ message: "Copied" });
-  };
-
   return (
     <div className="w-full">
       <div className="w-full p-4">
@@ -289,13 +282,13 @@ export default function Phone() {
                     {/*Price*/}
                     <div className="w-full bg-[#9DBDFF] rounded transition-shadow duration-500 hover:shadow-lg">
                       <div className="flex flex-col py-4 items-center justify-center">
-                        <p className="md:text-xl font-bold text-gray-600">
+                        <p className="md:text-xl font-bold text-gray-700">
                           GH₵{" "}
                           {phone.price
                             .toString()
                             .replace(/\B(?=(\d{3})+(?!\d))/g, ",")}
                         </p>
-                        <p className="text-xs text-gray-500">
+                        <p className="text-sm text-gray-600">
                           {phone.negotiable === "Yes" ? "Negotiable" : ""}
                         </p>
                       </div>
@@ -303,84 +296,40 @@ export default function Phone() {
 
                     {/* Poster details */}
                     <div className="w-full bg-cardBg rounded-lg h-full transition-shadow duration-500 hover:shadow-lg">
-                      <div className="flex justify-center py-4 gap-4">
-                        <div>
-                          <Avatar>
-                            <AvatarImage
-                              src={`${phone.avatarImageUrl}`}
-                              alt={`${phone.fullName}`}
-                            />
-                            <AvatarFallback>
-                              {phone.fullName?.split(" ")[0][0]}
-                            </AvatarFallback>
-                          </Avatar>
-                        </div>
+                      <Link href={`/shop/${phone.storeNameSlug}`}>
+                      {/* flex justify-center py-4 gap-4 */}
+                        <div className="flex justify-center items-center py-4 flex-wrap gap-y-1 gap-x-4 mt-2 text-sm text-gray-500">
+                          <div className="w-fit">
+                            <Avatar>
+                              <AvatarImage
+                                src={`${phone.avatarImageUrl}`}
+                                alt={`${phone.fullName}`}
+                              />
+                              <AvatarFallback>
+                                {phone.fullName?.split(" ")[0][0]}
+                              </AvatarFallback>
+                            </Avatar>
+                          </div>
 
-                        <div className="flex flex-col gap-y-2">
-                          <section className="flex flex-col">
-                            <span className="font-bold">{phone.storeName}</span>
-                            <span className="text-xs font-extralight text-gray-400">
-                              Member since -{" "}
-                              {new Date(phone.userCreatedAt).getFullYear()}
-                            </span>
-                          </section>
+                          <div className="flex flex-col gap-y-2">
+                            <section className="flex flex-col">
+                              <span className="font-bold">{phone.storeName}</span>
+                              <span className="flex items-center gap-1">
+                                 <Calendar size={14} /> Member since {new Date(phone.userCreatedAt).getFullYear()}
+                              </span>
+                            </section>
+                          </div>
                         </div>
-                      </div>
+                      </Link>
                     </div>
                   </div>
 
                   <div className="w-full border-2 border-dashed  rounded relative">
                     <div className="flex flex-col sm:flex-row justify-center p-4 gap-4">
-                      <DropdownMenu>
-                        <DropdownMenuTrigger asChild>
-                          <Button className="bg-[#9DBDFF]" variant={"outline"}>
-                            <PhoneCall /> Reveal contact
-                          </Button>
-                        </DropdownMenuTrigger>
-                        <DropdownMenuContent
-                          onCloseAutoFocus={(e) => {
-                            e.preventDefault();
-                            e.stopPropagation();
-                          }} // Remove black focus on the input field
-                          className="w-[--radix-dropdown-menu-trigger-width] flex flex-col justify-center items-center"
-                        >
-                          {phone?.phonePrimary && (
-                            <DropdownMenuItem>
-                              {" "}
-                              <PhoneCall /> {phone.phonePrimary}
-                              <span
-                                onClick={async () => {
-                                  await navigator.clipboard.writeText(
-                                    phone.phonePrimary,
-                                  );
-                                  await copyTextAlert();
-                                }}
-                              >
-                                <Copy />{" "}
-                              </span>{" "}
-                            </DropdownMenuItem>
-                          )}
-
-                          {phone?.phoneSecondary && (
-                            <DropdownMenuItem>
-                              {" "}
-                              <PhoneCall /> {phone.phoneSecondary}
-                              <span
-                                onClick={async () => {
-                                  await navigator.clipboard.writeText(
-                                    phone.phoneSecondary
-                                      ? phone.phoneSecondary
-                                      : "",
-                                  );
-                                  await copyTextAlert();
-                                }}
-                              >
-                                <Copy />{" "}
-                              </span>{" "}
-                            </DropdownMenuItem>
-                          )}
-                        </DropdownMenuContent>
-                      </DropdownMenu>
+                      <CopyPhoneNumber
+                          phonePrimary={phone?.phonePrimary ?? ""}
+                          phoneSecondary={phone?.phoneSecondary ?? ""}
+                      />
 
                       <Button disabled variant={"outline"}>
                         <MessageSquareMore />
@@ -426,25 +375,32 @@ export default function Phone() {
                       </p>
 
                       <div className="flex justify-center lg:justify-between items-center w-full gap-3">
-                        <section className="flex items-center gap-2">
-                          <Badge className="bg-white border-gray-200 text-black rounded-md px-2 py-1.5  hover:bg-white cursor-pointer">
-                            Likes 2,000{" "}
-                          </Badge>
+                        <section className="flex items-center gap-3">
+                          <Button variant="outline" className="gap-2 cursor-pointer">
+                             <ThumbsUp size={16}/> 2k
+                          </Button>
+                          
+                          <div className="flex gap-3 items-center">
+                            <Button variant="outline" className="gap-2 cursor-pointer">
+                              <Share2 size={16} /> Share
+                            </Button>
 
                           {phone.idVerified === "verified" && (
-                            <Badge className="bg-[#E0FBE2] rounded-md px-2 py-1.5 text-green-700 hover:bg-[#E0FBE2] cursor-pointer">
-                              Verified store
-                            </Badge>
+                            <Button variant={'outline'} className="border-green-200 bg-green-50 text-green-700 hover:bg-green-100 hover:text-green-700 cursor-pointer">
+                              <ShieldCheck size={16}/> Verified store
+                            </Button>
                           )}
+                          </div>
                         </section>
                         {bookmarkLoading ? (
-                          <Badge className="bg-white border-gray-200 text-black rounded-md px-2 py-1.5  hover:bg-white cursor-pointer">
+                          <Button variant={'outline'} className="bg-white border-gray-200 px-2 py-1.5 hover:bg-white cursor-pointer">
                             <span className="flex items-center justify-center gap-1">
                               <Spinner /> {adCounter?.total}
                             </span>
-                          </Badge>
+                          </Button>
                         ) : (
-                          <Badge
+                          <Button
+                            variant={'outline'}
                             onClick={() =>
                               bookmarkAd({
                                 adsId: data[0]?.adsId,
@@ -459,18 +415,18 @@ export default function Phone() {
                                 price: data[0]?.price,
                               })
                             }
-                            className={`${buyLData?.buyLater ? "bg-[#9DBDFF] border-[#9DBDFF] hover:bg-[#B3D1FF]" : "bg-gray-200 border-gray-200 hover:bg-gray-200"} text-black rounded-md px-2 py-1.5 cursor-pointer`}
+                            className={`${buyLData?.buyLater ? "bg-[#9DBDFF] border-[#9DBDFF] hover:bg-[#B3D1FF]" : ""} cursor-pointer`}
                           >
                             {buyLData?.buyLater ? (
                               <span className="flex items-center justify-center gap-1">
-                                <Bookmark size={15} /> {adCounter?.total}
+                                <Bookmark size={16} /> {adCounter?.total}
                               </span>
                             ) : (
                               <span className="flex items-center justify-center gap-1">
-                                <Bookmark size={15} /> {adCounter?.total}
+                                <Bookmark size={16} /> {adCounter?.total}
                               </span>
                             )}
-                          </Badge>
+                          </Button>
                         )}
                       </div>
                     </div>
@@ -585,59 +541,10 @@ export default function Phone() {
 
                         <section className="flex justify-between items-center">
                           <div className=" w-full flex justify-center py-2 gap-4">
-                            <DropdownMenu>
-                              <DropdownMenuTrigger asChild>
-                                <Button
-                                  className="bg-[#9DBDFF]"
-                                  variant={"outline"}
-                                >
-                                  <PhoneCall /> Reveal contact
-                                </Button>
-                              </DropdownMenuTrigger>
-                              <DropdownMenuContent
-                                onCloseAutoFocus={(e) => {
-                                  e.preventDefault();
-                                  e.stopPropagation();
-                                }} // Remove black focus on the input field
-                                className="w-[--radix-dropdown-menu-trigger-width] flex flex-col justify-center items-center"
-                              >
-                                {phone?.phonePrimary && (
-                                  <DropdownMenuItem>
-                                    {" "}
-                                    <PhoneCall /> {phone.phonePrimary}
-                                    <span
-                                      onClick={async () => {
-                                        await navigator.clipboard.writeText(
-                                          phone.phonePrimary,
-                                        );
-                                        await copyTextAlert();
-                                      }}
-                                    >
-                                      <Copy />{" "}
-                                    </span>{" "}
-                                  </DropdownMenuItem>
-                                )}
-
-                                {phone?.phoneSecondary && (
-                                  <DropdownMenuItem>
-                                    {" "}
-                                    <PhoneCall /> {phone.phoneSecondary}
-                                    <span
-                                      onClick={async () => {
-                                        await navigator.clipboard.writeText(
-                                          phone.phoneSecondary
-                                            ? phone.phoneSecondary
-                                            : "",
-                                        );
-                                        await copyTextAlert();
-                                      }}
-                                    >
-                                      <Copy />{" "}
-                                    </span>{" "}
-                                  </DropdownMenuItem>
-                                )}
-                              </DropdownMenuContent>
-                            </DropdownMenu>
+                            <CopyPhoneNumber
+                              phonePrimary={phone?.phonePrimary ?? ""}
+                              phoneSecondary={phone?.phoneSecondary ?? ""}
+                             />
 
                             <Button disabled variant={"outline"}>
                               {" "}
