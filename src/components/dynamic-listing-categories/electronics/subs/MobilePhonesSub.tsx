@@ -22,7 +22,7 @@ import {
   Tag,
   Briefcase,
   CheckCircle2,
-} from "lucide-react"; // Added Icons
+} from "lucide-react";
 
 interface MobilePhoneSubType {
   takeRegion: string;
@@ -35,7 +35,6 @@ interface MobilePhoneSubType {
   renderNextPage: (state: boolean) => void;
 }
 
-// ... (Keep all your Interfaces: IContentFormType, IBrand, IMobileGeneral, etc.) ...
 interface IContentFormType {
   brand: string;
   model: string;
@@ -133,13 +132,9 @@ const MobilePhonesSub = ({
     IModel[]
   >(brandValue ? `/api/content/mobile/model/${brandValue}` : null, fetcher);
 
-  // ... (Keep handleListingSubmission logic EXACTLY as is) ...
   const handleListingSubmission: SubmitHandler<IContentFormType> = async (
     data,
   ) => {
-    // ... your existing submission logic ...
-    // (I am omitting the logic body here to save space, but copy-paste your exact logic back in)
-    // START LOGIC COPY
     renderNextPage(false);
     const BRAND = "Apple";
     try {
@@ -170,7 +165,7 @@ const MobilePhonesSub = ({
       formData.set("region", takeRegion);
       formData.set("town", takeTown);
       formData.set("mainCategory", takeMainCategory);
-      formData.set("subCategory", takeSubCategory); //replace(/\s/g, "").toLowerCase()
+      formData.set("subCategory", takeSubCategory);
       formData.set("title", takeTitle);
       formData.set("description", takeDescription);
       // Mobile data starts from here
@@ -272,19 +267,9 @@ const MobilePhonesSub = ({
   const renderUI =
     isMobileBrandLoading || isMobileGeneralLoading || isMobileModelLoading;
 
-  // if (renderUI) {
-  //   return (
-  //     <div className="w-full h-64 flex items-center justify-center">
-  //       <BeatLoaderUI size={15} color="blue" />
-  //     </div>
-  //   );
-  // }
-
   return (
     <div className="w-full min-h-screen pb-20">
-      {/* Centered Container matching Step 1 */}
       <div className="w-full max-w-3xl mx-auto px-4 py-8 md:py-12">
-        {/* Header */}
         <div className="mb-8">
           <h1 className="text-3xl font-bold text-gray-900 tracking-tight">
             Phone Specs
@@ -293,13 +278,19 @@ const MobilePhonesSub = ({
             Step 2 of 2: Specific details for your device.
           </p>
         </div>
-        
 
-        {renderUI &&  <BeatLoaderUI color="blue" size={12} className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2" /> }
+        {renderUI && (
+          <BeatLoaderUI
+            color="blue"
+            size={12}
+            className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2"
+          />
+        )}
         <form onSubmit={handleSubmit(handleListingSubmission)}>
-        
-          <div className={`bg-white space-y-8 ${renderUI && 'pointer-events-none opacity-20'}`}>
-            {/* --- SECTION 1: CORE SPECS --- */}
+          <div
+            className={`bg-white space-y-8 ${renderUI && "pointer-events-none opacity-20"}`}
+          >
+            {/* --- CORE SPECS --- */}
             <div className="space-y-4">
               <div className="flex items-center gap-2 text-gray-800 font-semibold border-b border-gray-100 pb-2 mb-4">
                 <Smartphone size={18} className="text-blue-600" />
@@ -702,4 +693,3 @@ const MobilePhonesSub = ({
 };
 
 export default MobilePhonesSub;
-

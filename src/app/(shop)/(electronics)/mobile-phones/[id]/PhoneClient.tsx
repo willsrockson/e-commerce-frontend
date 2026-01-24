@@ -38,8 +38,18 @@ import Link from "next/link";
 import CopyPhoneNumber from "@/components/CopyPhoneNumber";
 
 const month = [
-  "January", "February", "March", "April", "May", "June",
-  "July", "August", "September", "October", "November", "December",
+  "January",
+  "February",
+  "March",
+  "April",
+  "May",
+  "June",
+  "July",
+  "August",
+  "September",
+  "October",
+  "November",
+  "December",
 ];
 
 interface Bookmark {
@@ -65,7 +75,7 @@ interface IListResponse {
 const fetcher = (url: string) => fetch(url).then((res) => res.json());
 
 export default function PhoneClient({ id }: { id: string }) {
-  const router = useRouter(); 
+  const router = useRouter();
   const [bookmarkLoading, setBookmarkLoading] = useState(false);
 
   const { data: adCounter, mutate: adCounterMutate } = useSWR<{
@@ -91,7 +101,7 @@ export default function PhoneClient({ id }: { id: string }) {
       // Use 'id' prop here
       const res = await fetch(
         cursor || `/api/fetch/mobile/phones/${id}?page=1`,
-        { signal }
+        { signal },
       );
       const json = (await res.json()) as IListResponse;
 
@@ -129,8 +139,16 @@ export default function PhoneClient({ id }: { id: string }) {
   }, [inView]);
 
   const bookmarkAd = async ({
-    adsId, title, condition, price, location,
-    mainSlug, subSlug, slug, imageUrl, phonePrimary,
+    adsId,
+    title,
+    condition,
+    price,
+    location,
+    mainSlug,
+    subSlug,
+    slug,
+    imageUrl,
+    phonePrimary,
   }: Bookmark) => {
     try {
       setBookmarkLoading(true);
@@ -139,8 +157,16 @@ export default function PhoneClient({ id }: { id: string }) {
         credentials: "include",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          adsId, title, condition, slug, mainSlug,
-          subSlug, price, location, imageUrl, phonePrimary,
+          adsId,
+          title,
+          condition,
+          slug,
+          mainSlug,
+          subSlug,
+          price,
+          location,
+          imageUrl,
+          phonePrimary,
         }),
       });
       const json = (await res.json()) as BackendResponseType;
@@ -223,7 +249,9 @@ export default function PhoneClient({ id }: { id: string }) {
                   {open && (
                     <Lightbox
                       plugins={[Counter]}
-                      counter={{ container: { style: { top: 0, bottom: "unset" } } }}
+                      counter={{
+                        container: { style: { top: 0, bottom: "unset" } },
+                      }}
                       open={open}
                       close={() => setOpen(false)}
                       slides={phone.images.map((pic) => ({ src: pic }))}
@@ -233,66 +261,75 @@ export default function PhoneClient({ id }: { id: string }) {
 
                 {/* Right Side Info */}
                 <div className="w-full h-full flex flex-col gap-2">
-                   {/* Price Block */}
-                   <div className="w-full bg-[#9DBDFF] rounded transition-shadow duration-500 hover:shadow-lg">
-                      <div className="flex flex-col py-4 items-center justify-center">
-                        <p className="md:text-xl font-bold text-gray-700">
-                          GH₵ {phone.price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}
-                        </p>
-                        <p className="text-sm text-gray-600">
-                          {phone.negotiable === "Yes" ? "Negotiable" : ""}
-                        </p>
-                      </div>
+                  {/* Price Block */}
+                  <div className="w-full bg-[#9DBDFF] rounded transition-shadow duration-500 hover:shadow-lg">
+                    <div className="flex flex-col py-4 items-center justify-center">
+                      <p className="md:text-xl font-bold text-gray-700">
+                        GH₵{" "}
+                        {phone.price
+                          .toString()
+                          .replace(/\B(?=(\d{3})+(?!\d))/g, ",")}
+                      </p>
+                      <p className="text-sm text-gray-600">
+                        {phone.negotiable === "Yes" ? "Negotiable" : ""}
+                      </p>
                     </div>
+                  </div>
 
-                    {/* Seller Details */}
-                    <div className="w-full bg-cardBg rounded-lg h-fit transition-shadow duration-500 hover:shadow-lg">
-                      <Link href={`/shop/${phone.storeNameSlug}`}>
-                        <div className="flex justify-center items-center py-4 flex-wrap gap-y-1 gap-x-4 text-sm text-gray-500">
-                          <div className="w-fit">
-                            <Avatar>
-                              <AvatarImage src={`${phone.avatarImageUrl}`} alt={`${phone.fullName}`} />
-                              <AvatarFallback>{phone.fullName?.split(" ")[0][0]}</AvatarFallback>
-                            </Avatar>
-                          </div>
-                          <div className="flex flex-col gap-y-2">
-                            <section className="flex flex-col">
-                              <span className="font-bold">{phone.storeName}</span>
-                              <span className="flex items-center gap-1">
-                                 <Calendar size={14} /> Member since {new Date(phone.userCreatedAt).getFullYear()}
-                              </span>
-                            </section>
-                          </div>
+                  {/* Seller Details */}
+                  <div className="w-full bg-cardBg rounded-lg h-fit transition-shadow duration-500 hover:shadow-lg">
+                    <Link href={`/shop/${phone.storeNameSlug}`}>
+                      <div className="flex justify-center items-center py-4 flex-wrap gap-y-1 gap-x-4 text-sm text-gray-500">
+                        <div className="w-fit">
+                          <Avatar>
+                            <AvatarImage
+                              src={`${phone.avatarImageUrl}`}
+                              alt={`${phone.fullName}`}
+                            />
+                            <AvatarFallback>
+                              {phone.fullName?.split(" ")[0][0]}
+                            </AvatarFallback>
+                          </Avatar>
                         </div>
-                      </Link>
-                    </div>
-
-                    {/* Contact Buttons */}
-                    <div className="w-full border-2 border-dashed rounded relative">
-                      <div className="flex flex-col sm:flex-row justify-center p-4 gap-4">
-                        <CopyPhoneNumber
-                            phonePrimary={phone?.phonePrimary ?? ""}
-                            phoneSecondary={phone?.phoneSecondary ?? ""}
-                        />
-                        <Button disabled variant={"outline"}>
-                          <MessageSquareMore /> Chat seller
-                        </Button>
+                        <div className="flex flex-col gap-y-2">
+                          <section className="flex flex-col">
+                            <span className="font-bold">{phone.storeName}</span>
+                            <span className="flex items-center gap-1">
+                              <Calendar size={14} /> Member since{" "}
+                              {new Date(phone.userCreatedAt).getFullYear()}
+                            </span>
+                          </section>
+                        </div>
                       </div>
-                    </div>
+                    </Link>
+                  </div>
 
-                    {/* Safety Tips */}
-                    <div className="w-full sm:w-fit sm:px-10 sm:py-5 lg:w-full border-2 border-dashed rounded">
-                      <div className="flex flex-col justify-center items-center py-4">
-                        <span className="font-bold">Safety tips</span>
-                        <ul className="text-sm text-gray-600 list-disc">
-                          <li>Choose a safe meeting location</li>
-                          <li>Bring a friend if possible</li>
-                          <li>Inspect the item carefully</li>
-                          <li>Avoid carrying large amount of cash</li>
-                          <li>Trust your instincts</li>
-                        </ul>
-                      </div>
+                  {/* Contact Buttons */}
+                  <div className="w-full border-2 border-dashed rounded relative">
+                    <div className="flex flex-col sm:flex-row justify-center p-4 gap-4">
+                      <CopyPhoneNumber
+                        phonePrimary={phone?.phonePrimary ?? ""}
+                        phoneSecondary={phone?.phoneSecondary ?? ""}
+                      />
+                      <Button disabled variant={"outline"}>
+                        <MessageSquareMore /> Chat seller
+                      </Button>
                     </div>
+                  </div>
+
+                  {/* Safety Tips */}
+                  <div className="w-full sm:w-fit sm:px-10 sm:py-5 lg:w-full border-2 border-dashed rounded">
+                    <div className="flex flex-col justify-center items-center py-4">
+                      <span className="font-bold">Safety tips</span>
+                      <ul className="text-sm text-gray-600 list-disc">
+                        <li>Choose a safe meeting location</li>
+                        <li>Bring a friend if possible</li>
+                        <li>Inspect the item carefully</li>
+                        <li>Avoid carrying large amount of cash</li>
+                        <li>Trust your instincts</li>
+                      </ul>
+                    </div>
+                  </div>
                 </div>
 
                 {/* Main Details Section */}
@@ -305,39 +342,56 @@ export default function PhoneClient({ id }: { id: string }) {
 
                       <p className="flex text-xs items-center gap-1 text-gray-600">
                         <MapPin size={13} />
-                        {phone.region + ", " + phone.town + ", " + 
-                         new Date(phone.createdAt).getDate() + " " +
-                         month[new Date(phone.createdAt).getMonth()] + " " +
-                         new Date(phone.createdAt).getFullYear()}
+                        {phone.region +
+                          ", " +
+                          phone.town +
+                          ", " +
+                          new Date(phone.createdAt).getDate() +
+                          " " +
+                          month[new Date(phone.createdAt).getMonth()] +
+                          " " +
+                          new Date(phone.createdAt).getFullYear()}
                       </p>
 
                       <div className="flex justify-center lg:justify-between items-center w-full gap-3">
                         <section className="flex items-center gap-3">
-                          <Button variant="outline" className="gap-2 cursor-pointer">
-                             <ThumbsUp size={16}/> 2k
+                          <Button
+                            variant="outline"
+                            className="gap-2 cursor-pointer"
+                          >
+                            <ThumbsUp size={16} /> 2k
                           </Button>
                           <div className="flex gap-3 items-center">
-                            <Button variant="outline" className="gap-2 cursor-pointer">
+                            <Button
+                              variant="outline"
+                              className="gap-2 cursor-pointer"
+                            >
                               <Share2 size={16} /> Share
                             </Button>
                             {phone.idVerified === "verified" && (
-                              <Button variant={'outline'} className="border-green-200 bg-green-50 text-green-700 hover:bg-green-100 hover:text-green-700 cursor-pointer">
-                                <ShieldCheck size={16}/> Verified store
+                              <Button
+                                variant={"outline"}
+                                className="border-green-200 bg-green-50 text-green-700 hover:bg-green-100 hover:text-green-700 cursor-pointer"
+                              >
+                                <ShieldCheck size={16} /> Verified store
                               </Button>
                             )}
                           </div>
                         </section>
-                        
+
                         {/* Bookmark Button */}
                         {bookmarkLoading ? (
-                          <Button variant={'outline'} className="bg-white border-gray-200 px-2 py-1.5 hover:bg-white cursor-pointer">
+                          <Button
+                            variant={"outline"}
+                            className="bg-white border-gray-200 min-w-4 hover:bg-white cursor-pointer"
+                          >
                             <span className="flex items-center justify-center gap-1">
                               <Spinner /> {adCounter?.total}
                             </span>
                           </Button>
                         ) : (
                           <Button
-                            variant={'outline'}
+                            variant={"outline"}
                             onClick={() =>
                               bookmarkAd({
                                 adsId: data[0]?.adsId,
@@ -352,10 +406,10 @@ export default function PhoneClient({ id }: { id: string }) {
                                 price: data[0]?.price,
                               })
                             }
-                            className={`${buyLData?.buyLater ? "bg-[#9DBDFF] border-[#9DBDFF] hover:bg-[#B3D1FF]" : ""} cursor-pointer`}
+                            className={`${buyLData?.buyLater ? "bg-[#9DBDFF] border-[#9DBDFF] hover:bg-[#B3D1FF]" : ""} cursor-pointer min-w-4`}
                           >
                             <span className="flex items-center justify-center gap-1">
-                                <Bookmark size={16} /> {adCounter?.total}
+                              <Bookmark size={16} /> {adCounter?.total}
                             </span>
                           </Button>
                         )}
@@ -367,54 +421,84 @@ export default function PhoneClient({ id }: { id: string }) {
                     {/* Specs Grid */}
                     <div className="w-full ">
                       <div className="w-full grid grid-cols-3 md:place-items-start sm:grid-cols-5 text-gray-500 text-sm gap-4">
-                         <section className="flex flex-col items-center">
-                            <span className="text-black font-semibold">{phone.brand}</span>
-                            <span className="text-xs sm:text-sm">Brand</span>
-                         </section>
-                         <section className="flex flex-col items-center">
-                            <span className="text-black text-center font-semibold">{phone.model}</span>
-                            <span className="text-xs sm:text-sm">Model</span>
-                         </section>
-                         <section className="flex flex-col items-center">
-                            <span className="text-black font-semibold">{phone.condition}</span>
-                            <span className="text-xs sm:text-sm">Condition</span>
-                         </section>
-                         <section className="flex flex-col items-center">
-                           <span className="text-black font-semibold">{phone.color}</span>
-                           <span className="text-xs sm:text-sm">Color</span>
-                         </section>
-                         <section className="flex flex-col items-center">
-                           <span className="text-black font-semibold ">{phone.storage}</span>
-                           <span className="text-xs sm:text-sm">Storage</span>
-                         </section>
-                         <section className="flex flex-col items-center">
-                           <span className="text-black font-semibold">{phone.ram}</span>
-                           <span className="text-xs sm:text-sm">Ram</span>
-                         </section>
-                         <section className="flex flex-col items-center">
-                           <span className="text-black font-semibold">{phone.exchangePossible}</span>
-                           <span className="text-xs sm:text-sm">Swappable</span>
-                         </section>
-                         <section className="flex flex-col items-center">
-                           <span className="text-black font-semibold">{phone.screenSize}</span>
-                           <span className="text-xs sm:text-sm">Screen Size</span>
-                         </section>
-                         <section className="flex flex-col items-center">
-                           <span className="text-black font-semibold">{phone.batterySize}</span>
-                           <span className="text-xs sm:text-sm">Battery Size</span>
-                         </section>
-                         {phone.batteryHealth && (
+                        <section className="flex flex-col items-center">
+                          <span className="text-black font-semibold">
+                            {phone.brand}
+                          </span>
+                          <span className="text-xs sm:text-sm">Brand</span>
+                        </section>
+                        <section className="flex flex-col items-center">
+                          <span className="text-black text-center font-semibold">
+                            {phone.model}
+                          </span>
+                          <span className="text-xs sm:text-sm">Model</span>
+                        </section>
+                        <section className="flex flex-col items-center">
+                          <span className="text-black font-semibold">
+                            {phone.condition}
+                          </span>
+                          <span className="text-xs sm:text-sm">Condition</span>
+                        </section>
+                        <section className="flex flex-col items-center">
+                          <span className="text-black font-semibold">
+                            {phone.color}
+                          </span>
+                          <span className="text-xs sm:text-sm">Color</span>
+                        </section>
+                        <section className="flex flex-col items-center">
+                          <span className="text-black font-semibold ">
+                            {phone.storage}
+                          </span>
+                          <span className="text-xs sm:text-sm">Storage</span>
+                        </section>
+                        <section className="flex flex-col items-center">
+                          <span className="text-black font-semibold">
+                            {phone.ram}
+                          </span>
+                          <span className="text-xs sm:text-sm">Ram</span>
+                        </section>
+                        <section className="flex flex-col items-center">
+                          <span className="text-black font-semibold">
+                            {phone.exchangePossible}
+                          </span>
+                          <span className="text-xs sm:text-sm">Swappable</span>
+                        </section>
+                        <section className="flex flex-col items-center">
+                          <span className="text-black font-semibold">
+                            {phone.screenSize}
+                          </span>
+                          <span className="text-xs sm:text-sm">
+                            Screen Size
+                          </span>
+                        </section>
+                        <section className="flex flex-col items-center">
+                          <span className="text-black font-semibold">
+                            {phone.batterySize}
+                          </span>
+                          <span className="text-xs sm:text-sm">
+                            Battery Size
+                          </span>
+                        </section>
+                        {phone.batteryHealth && (
                           <section className="flex flex-col items-center">
-                            <span className="text-black font-semibold">{phone.batteryHealth}</span>
-                            <span className="text-xs sm:text-sm">Battery Health</span>
+                            <span className="text-black font-semibold">
+                              {phone.batteryHealth}
+                            </span>
+                            <span className="text-xs sm:text-sm">
+                              Battery Health
+                            </span>
                           </section>
-                         )}
-                         {phone.accessories && (
+                        )}
+                        {phone.accessories && (
                           <section className="flex flex-col items-start">
-                            <span className="text-black font-semibold text-left">{phone.accessories.map((as) => as).toString()}</span>
-                            <span className="text-xs sm:text-sm">Accessories</span>
+                            <span className="text-black font-semibold text-left">
+                              {phone.accessories.map((as) => as).toString()}
+                            </span>
+                            <span className="text-xs sm:text-sm">
+                              Accessories
+                            </span>
                           </section>
-                         )}
+                        )}
                       </div>
                     </div>
                   </div>
@@ -425,21 +509,23 @@ export default function PhoneClient({ id }: { id: string }) {
                   <div className="w-full">
                     <div className="flex flex-col max-w-full text-sm text-gray-600 gap-2">
                       <section className="flex">
-                        <span className="whitespace-pre-wrap">{phone.description}</span>
+                        <span className="whitespace-pre-wrap">
+                          {phone.description}
+                        </span>
                       </section>
-                      
+
                       <div className="w-full border-b-2 border-dashed my-5"></div>
-                      
+
                       <section className="flex justify-between items-center">
-                         <div className=" w-full flex justify-center py-2 gap-4">
-                            <CopyPhoneNumber
-                              phonePrimary={phone?.phonePrimary ?? ""}
-                              phoneSecondary={phone?.phoneSecondary ?? ""}
-                             />
-                            <Button disabled variant={"outline"}>
-                              <MessageSquareMore /> Chat seller
-                            </Button>
-                         </div>
+                        <div className=" w-full flex justify-center py-2 gap-4">
+                          <CopyPhoneNumber
+                            phonePrimary={phone?.phonePrimary ?? ""}
+                            phoneSecondary={phone?.phoneSecondary ?? ""}
+                          />
+                          <Button disabled variant={"outline"}>
+                            <MessageSquareMore /> Chat seller
+                          </Button>
+                        </div>
                       </section>
                     </div>
                   </div>
@@ -447,16 +533,20 @@ export default function PhoneClient({ id }: { id: string }) {
                   {/* Related Listings */}
                   <div className="w-full m-auto pb-32 pt-6">
                     <div className="w-full mb-2">
-                      <p className="font-semibold text-lg text-gray-800">Related Listings</p>
+                      <p className="font-semibold text-lg text-gray-800">
+                        Related Listings
+                      </p>
                     </div>
                     <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
                       {list.items?.length === 0 ? (
-                        <span className="text-gray-400 text-sm">No data found</span>
+                        <span className="text-gray-400 text-sm">
+                          No data found
+                        </span>
                       ) : (
                         list.items.map((data) => (
                           <ProductsCard
                             key={data.adsId}
-                            id={`/${data.subSlug}/${data.slug}`} 
+                            id={`/${data.subSlug}/${data.slug}`}
                             firstImageUrl={data.firstImage}
                             price={data.price}
                             title={data.title}
@@ -468,8 +558,15 @@ export default function PhoneClient({ id }: { id: string }) {
                           />
                         ))
                       )}
-                      <div className={!metadata.hasMore ? "hidden" : "block"} ref={ref}>
-                        <BeatLoaderUI color={"blue"} size={10} className="w-full max-w-7xl m-auto mb-6 flex justify-center pt-4" />
+                      <div
+                        className={!metadata.hasMore ? "hidden" : "block"}
+                        ref={ref}
+                      >
+                        <BeatLoaderUI
+                          color={"blue"}
+                          size={10}
+                          className="w-full max-w-7xl m-auto mb-6 flex justify-center pt-4"
+                        />
                       </div>
                     </div>
                   </div>

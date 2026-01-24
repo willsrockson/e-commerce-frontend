@@ -198,7 +198,7 @@ export default function EditMobilePhones() {
   return (
     <div className="w-full">
       <div className="px-2 pt-10">
-        <div className=" w-full max-w-[600px] md:max-w-[900px] m-auto h-fit px-5 md:px-10 bg-white ">
+        <div className="w-full md:max-w-[900px] m-auto h-fit px-5 md:px-10 bg-white ">
           <div className="flex justify-between pb-5 ">
             <Badge
               className="bg-[#EBF1F4] hover:bg-[#F4F3F3] text-gray-600 cursor-pointer rounded-full"
@@ -211,9 +211,7 @@ export default function EditMobilePhones() {
               <div className="p-2 bg-blue-50 rounded-full text-blue-600">
                 <FilePenLine size={18} />
               </div>
-              <h1 className="text-xl font-bold text-gray-900">
-                Edit Post
-              </h1>
+              <h1 className="text-xl font-bold text-gray-900">Edit Post</h1>
             </div>
 
             <Badge
