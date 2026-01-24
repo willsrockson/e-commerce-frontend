@@ -1,11 +1,14 @@
 import { Metadata } from "next";
 import PhoneClient from "./PhoneClient";
 
-// 1. Fetch data for SEO (Server-side only)
 async function getPhoneSEO(id: string) {
+  const url =
+     process.env.NODE_ENV === "production"
+        ? `${process.env.NEXT_PUBLIC_API_URL}/api/fetch/mobile/phones/${id}?page=1`
+        : `${process.env.LOCAL_NEXT_PUBLIC_API_URL}/api/fetch/mobile/phones/${id}?page=1`;
   try {
-    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/fetch/mobile/phones/${id}?page=1`, {
-      cache: "no-store" 
+    const res = await fetch(url, {
+      cache: "no-store"
     });
     if (!res.ok) return null;
     const json = await res.json();
@@ -15,13 +18,15 @@ async function getPhoneSEO(id: string) {
   }
 }
 
-// 2. Generate Metadata
+
 type Props = {
-  params: { id: string };
+  params: Promise<{ id: string }>;
 };
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
-  const product = await getPhoneSEO(params.id);
+ 
+  const { id } = await params;
+  const product = await getPhoneSEO(id);
 
   if (!product) {
     return { title: "Item Not Found | Tonmame" };
@@ -36,9 +41,9 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   };
 }
 
-// 3. Render the Client Component
-export default function MobilePhonePage({ params }: Props) {
-  return <PhoneClient id={params.id} />;
+export default async function MobilePhonePage({ params }: Props) {
+  const { id } = await params;
+  return <PhoneClient id={id} />;
 }
 
 

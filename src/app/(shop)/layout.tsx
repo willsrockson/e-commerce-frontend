@@ -14,6 +14,8 @@ export const metadata: Metadata = {
     default: "Tonmame Market Hub | Buy & Sell in Ghana",
     template: "%s | Tonmame Market Hub",
   },
+
+  metadataBase: new URL(process.env.NEXT_PUBLIC_URL!),
   
   description: "The safest marketplace to buy and sell mobile phones, laptops, cars, and property in Ghana. Join thousands of verified sellers today.",
   
@@ -26,7 +28,7 @@ export const metadata: Metadata = {
     siteName: "Tonmame",
     images: [
       {
-        url: "/org.avif",
+        url: "/images/org.avif",
         width: 1200,
         height: 630,
         alt: "Tonmame Market Hub Preview",
@@ -40,7 +42,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "Tonmame Market Hub",
     description: "The safest marketplace in Ghana.",
-    images: ["/org.avif"],
+    images: ["/images/org.avif"],
   },
 };
 
